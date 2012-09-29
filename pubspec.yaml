@@ -1,0 +1,5 @@
+name:  pgen
+description:  A password generator
+#dependencies: 
+#  unittest: { sdk: unittest }
+

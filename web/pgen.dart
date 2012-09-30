@@ -49,7 +49,7 @@ class PasswordGenerator {
       charPool.add("0123456789");
     }
     if (_special.checked) {
-      charPool.add("!#\$%&()*+,-./:;<=>?@[]^_{}");
+      charPool.add(r'!#$%&()*+,-./:;<=>?@[]^_{}');
     }
     return charPool.toString().charCodes();
   }

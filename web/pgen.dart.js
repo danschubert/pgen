@@ -22,7 +22,7 @@ $$.ExceptionImplementation = {"":
 };
 
 $$.FutureImpl = {"":
- ["_isComplete", "_lib0_value?", "_exception", "_stackTrace", "_exceptionHandled", "_successListeners", "_exceptionHandlers", "_completionListeners"],
+ ["_isComplete", "_lib_value?", "_exception", "_stackTrace", "_exceptionHandled", "_successListeners", "_exceptionHandlers", "_completionListeners"],
  "super": "Object",
  get$value: function() {
   if (this.get$isComplete() !== true)
@@ -30,7 +30,7 @@ $$.FutureImpl = {"":
   var t1 = this._exception;
   if (!(t1 == null))
     throw $.$$throw(t1);
-  return this._lib0_value;
+  return this._lib_value;
 },
  get$stackTrace: function() {
   if (this.get$isComplete() !== true)
@@ -94,7 +94,7 @@ $$.FutureImpl = {"":
  _setValue$1: function(value) {
   if (this._isComplete === true)
     throw $.$$throw($.FutureAlreadyCompleteException$());
-  this._lib0_value = value;
+  this._lib_value = value;
   this._complete$0();
 },
  _setException$2: function(exception, stackTrace) {
@@ -737,7 +737,7 @@ $$._DoubleLinkedQueueIterator = {"":
 },
  next$0: function() {
   if (this.hasNext$0() !== true)
-    throw $.$$throw($.CTC2);
+    throw $.$$throw($.CTC10);
   this._currentEntry = this._currentEntry.get$_next();
   return this._currentEntry.get$element();
 },
@@ -747,13 +747,13 @@ $$._DoubleLinkedQueueIterator = {"":
 };
 
 $$.JSSyntaxRegExp = {"":
- ["_ignoreCase", "_multiLine", "_lib0_pattern"],
+ ["_ignoreCase", "_multiLine", "_lib_pattern"],
  "super": "Object",
  hasMatch$1: function(str) {
   return $.regExpTest(this, $.checkString(str));
 },
  get$pattern: function() {
-  return this._lib0_pattern;
+  return this._lib_pattern;
 },
  get$multiLine: function() {
   return this._multiLine;
@@ -765,20 +765,20 @@ $$.JSSyntaxRegExp = {"":
 };
 
 $$.StringBufferImpl = {"":
- ["_buffer", "_length"],
+ ["_buffer", "_lib_length"],
  "super": "Object",
  get$length: function() {
-  return this._length;
+  return this._lib_length;
 },
  isEmpty$0: function() {
-  return this._length === 0;
+  return this._lib_length === 0;
 },
  add$1: function(obj) {
   var str = $.toString(obj);
   if (str == null || $.isEmpty(str) === true)
     return this;
   $.add$1(this._buffer, str);
-  this._length = $.add(this._length, $.get$length(str));
+  this._lib_length = $.add(this._lib_length, $.get$length(str));
   return this;
 },
  addCharCode$1: function(charCode) {
@@ -786,7 +786,7 @@ $$.StringBufferImpl = {"":
 },
  clear$0: function() {
   this._buffer = $.ListImplementation_List(null);
-  this._length = 0;
+  this._lib_length = 0;
   return this;
 },
  toString$0: function() {
@@ -1013,6 +1013,84 @@ $$.Closure = {"":
 $$.MetaInfo = {"":
  ["_tag?", "_tags", "_set?"],
  "super": "Object"
+};
+
+$$.PasswordGenerator = {"":
+ ["_length", "_lowerCase", "_upperCase", "_numbers", "_special", "_generate?", "_password"],
+ "super": "Object",
+ initialize$0: function() {
+  var t1 = this._lowerCase;
+  this._readElementValue$1(t1);
+  var t2 = this._upperCase;
+  this._readElementValue$1(t2);
+  var t3 = this._numbers;
+  this._readElementValue$1(t3);
+  var t4 = this._special;
+  this._readElementValue$1(t4);
+  var t5 = this._canGenerate$0() !== true;
+  var t6 = this._generate;
+  t6.set$disabled(t5);
+  this._addElementHandler$1(t1);
+  this._addElementHandler$1(t2);
+  this._addElementHandler$1(t3);
+  this._addElementHandler$1(t4);
+  this._addElementHandler$1(t6);
+  if (t6.get$disabled() !== true)
+    this._generatePassword$0();
+},
+ _canGenerate$0: function() {
+  return this._lowerCase.get$checked() === true || this._upperCase.get$checked() === true || this._numbers.get$checked() === true || this._special.get$checked() === true;
+},
+ _createCharPool$0: function() {
+  var charPool = $.StringBuffer_StringBuffer('');
+  if (this._lowerCase.get$checked() === true)
+    $.add$1(charPool, 'abcdefghijklmnopqrstuvwxyz');
+  if (this._upperCase.get$checked() === true)
+    $.add$1(charPool, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+  if (this._numbers.get$checked() === true)
+    $.add$1(charPool, '0123456789');
+  if (this._special.get$checked() === true)
+    $.add$1(charPool, '!#$%&()*+,-./:;<=>?@[]^_{}');
+  return $.charCodes($.toString(charPool));
+},
+ _generatePassword$0: function() {
+  var charCodes = this._createCharPool$0();
+  if (typeof charCodes !== 'string' && (typeof charCodes !== 'object' || charCodes === null || charCodes.constructor !== Array && !charCodes.is$JavaScriptIndexingBehavior()))
+    return this._generatePassword$0$bailout(1, charCodes);
+  var random = $.Random_Random(null);
+  var result = $.StringBuffer_StringBuffer('');
+  for (var t1 = this._length, i = 0; i < t1; ++i) {
+    var t2 = random.nextInt$1(charCodes.length);
+    if (t2 !== (t2 | 0))
+      throw $.iae(t2);
+    if (t2 < 0 || t2 >= charCodes.length)
+      throw $.ioore(t2);
+    result.addCharCode$1(charCodes[t2]);
+  }
+  t1 = $.toString(result);
+  this._password.set$value(t1);
+},
+ _generatePassword$0$bailout: function(state, charCodes) {
+  var random = $.Random_Random(null);
+  var result = $.StringBuffer_StringBuffer('');
+  for (var t1 = this._length, i = 0; i < t1; ++i)
+    result.addCharCode$1($.index(charCodes, random.nextInt$1($.get$length(charCodes))));
+  t1 = $.toString(result);
+  this._password.set$value(t1);
+},
+ _readElementValue$1: function(elem) {
+  var saved = $.index($.window().get$localStorage(), elem.get$id());
+  if (!(saved == null))
+    if ($.eqB(elem.get$type(), 'checkbox'))
+      elem.set$checked($.eqB(saved, 'true') && true);
+},
+ _addElementHandler$1: function(elem) {
+  if ($.eqB(elem.get$type(), 'checkbox'))
+    $.add$1(elem.get$on().get$click(), new $.PasswordGenerator__addElementHandler_anon(this, elem));
+  else if ($.eqB(elem.get$type(), 'submit'))
+    if ($.eqB(elem.get$id(), 'generate'))
+      $.add$1(elem.get$on().get$click(), new $.PasswordGenerator__addElementHandler_anon0(this));
+}
 };
 
 $$._AbstractWorkerEventsImpl = {"":
@@ -1291,10 +1369,10 @@ $$._WorkerEventsImpl = {"":
 };
 
 $$._FixedSizeListIterator = {"":
- ["_lib_length", "_array", "_pos"],
+ ["_lib0_length", "_array", "_pos"],
  "super": "_VariableSizeListIterator",
  hasNext$0: function() {
-  var t1 = this._lib_length;
+  var t1 = this._lib0_length;
   if (typeof t1 !== 'number')
     return this.hasNext$0$bailout(1, t1, 0);
   var t3 = this._pos;
@@ -1314,7 +1392,7 @@ $$._FixedSizeListIterator = {"":
   }
   switch (state) {
     case 0:
-      var t1 = this._lib_length;
+      var t1 = this._lib0_length;
     case 1:
       state = 0;
       var t3 = this._pos;
@@ -1360,7 +1438,7 @@ $$._VariableSizeListIterator = {"":
 },
  next$0: function() {
   if (this.hasNext$0() !== true)
-    throw $.$$throw($.CTC2);
+    throw $.$$throw($.CTC10);
   var t1 = this._array;
   if (typeof t1 !== 'string' && (typeof t1 !== 'object' || t1 === null || t1.constructor !== Array && !t1.is$JavaScriptIndexingBehavior()))
     return this.next$0$bailout(1, t1, 0);
@@ -1387,7 +1465,7 @@ $$._VariableSizeListIterator = {"":
   switch (state) {
     case 0:
       if (this.hasNext$0() !== true)
-        throw $.$$throw($.CTC2);
+        throw $.$$throw($.CTC10);
       var t1 = this._array;
     case 1:
       state = 0;
@@ -2069,30 +2147,6 @@ $$._Random = {"":
 }
 };
 
-$$.main_anon = {"":
- [],
- "super": "Closure",
- call$1: function(e) {
-  $.generatePassword();
-}
-};
-
-$$.Maps__emitMap_anon = {"":
- ["result_3", "box_0", "visiting_2"],
- "super": "Closure",
- call$2: function(k, v) {
-  var t1 = this.box_0;
-  if (t1.first_1 !== true)
-    $.add$1(this.result_3, ', ');
-  t1.first_1 = false;
-  t1 = this.result_3;
-  var t2 = this.visiting_2;
-  $.Collections__emitObject(k, t1, t2);
-  $.add$1(t1, ': ');
-  $.Collections__emitObject(v, t1, t2);
-}
-};
-
 $$._convertDartToNative_PrepareForStructuredClone_findSlot = {"":
  ["copies_3", "values_2"],
  "super": "Closure",
@@ -2159,33 +2213,33 @@ $$._convertDartToNative_PrepareForStructuredClone_walk = {"":
   if (typeof e === 'string')
     return e;
   if (typeof e === 'object' && e !== null && !!e.is$Date)
-    throw $.$$throw($.CTC4);
+    throw $.$$throw($.CTC2);
   if (typeof e === 'object' && e !== null && !!e.is$RegExp)
-    throw $.$$throw($.CTC5);
+    throw $.$$throw($.CTC3);
   if (typeof e === 'object' && e !== null && e.is$_FileImpl())
     return e;
   if (typeof e === 'object' && e !== null && e.is$File())
-    throw $.$$throw($.CTC6);
+    throw $.$$throw($.CTC4);
   if (typeof e === 'object' && e !== null && e.is$_BlobImpl())
     return e;
   if (typeof e === 'object' && e !== null && e.is$Blob())
-    throw $.$$throw($.CTC7);
+    throw $.$$throw($.CTC5);
   if (typeof e === 'object' && e !== null && e.is$_FileListImpl())
     return e;
   if (typeof e === 'object' && e !== null && e.is$FileList())
-    throw $.$$throw($.CTC8);
+    throw $.$$throw($.CTC6);
   if (typeof e === 'object' && e !== null && e.is$_ImageDataImpl())
     return e;
   if (typeof e === 'object' && e !== null && e.is$ImageData())
-    throw $.$$throw($.CTC8);
+    throw $.$$throw($.CTC6);
   if (typeof e === 'object' && e !== null && e.is$_ArrayBufferImpl())
     return e;
   if (typeof e === 'object' && e !== null && e.is$ArrayBuffer())
-    throw $.$$throw($.CTC9);
+    throw $.$$throw($.CTC7);
   if (typeof e === 'object' && e !== null && e.is$_ArrayBufferViewImpl())
     return e;
   if (typeof e === 'object' && e !== null && e.is$ArrayBufferView())
-    throw $.$$throw($.CTC10);
+    throw $.$$throw($.CTC8);
   if (typeof e === 'object' && e !== null && e.is$Map()) {
     var slot = this.findSlot_8.call$1(e);
     t1.copy_1 = this.readSlot_7.call$1(slot);
@@ -2264,7 +2318,7 @@ $$._convertDartToNative_PrepareForStructuredClone_walk = {"":
     }
     return copy;
   }
-  throw $.$$throw($.CTC11);
+  throw $.$$throw($.CTC9);
 },
  call$1$bailout: function(state, env0, env1, env2, env3, env4, env5, env6) {
   switch (state) {
@@ -2299,33 +2353,33 @@ $$._convertDartToNative_PrepareForStructuredClone_walk = {"":
       if (typeof e === 'string')
         return e;
       if (typeof e === 'object' && e !== null && !!e.is$Date)
-        throw $.$$throw($.CTC4);
+        throw $.$$throw($.CTC2);
       if (typeof e === 'object' && e !== null && !!e.is$RegExp)
-        throw $.$$throw($.CTC5);
+        throw $.$$throw($.CTC3);
       if (typeof e === 'object' && e !== null && e.is$_FileImpl())
         return e;
       if (typeof e === 'object' && e !== null && e.is$File())
-        throw $.$$throw($.CTC6);
+        throw $.$$throw($.CTC4);
       if (typeof e === 'object' && e !== null && e.is$_BlobImpl())
         return e;
       if (typeof e === 'object' && e !== null && e.is$Blob())
-        throw $.$$throw($.CTC7);
+        throw $.$$throw($.CTC5);
       if (typeof e === 'object' && e !== null && e.is$_FileListImpl())
         return e;
       if (typeof e === 'object' && e !== null && e.is$FileList())
-        throw $.$$throw($.CTC8);
+        throw $.$$throw($.CTC6);
       if (typeof e === 'object' && e !== null && e.is$_ImageDataImpl())
         return e;
       if (typeof e === 'object' && e !== null && e.is$ImageData())
-        throw $.$$throw($.CTC8);
+        throw $.$$throw($.CTC6);
       if (typeof e === 'object' && e !== null && e.is$_ArrayBufferImpl())
         return e;
       if (typeof e === 'object' && e !== null && e.is$ArrayBuffer())
-        throw $.$$throw($.CTC9);
+        throw $.$$throw($.CTC7);
       if (typeof e === 'object' && e !== null && e.is$_ArrayBufferViewImpl())
         return e;
       if (typeof e === 'object' && e !== null && e.is$ArrayBufferView())
-        throw $.$$throw($.CTC10);
+        throw $.$$throw($.CTC8);
       if (typeof e === 'object' && e !== null && e.is$Map()) {
         var slot = this.findSlot_8.call$1(e);
         t1.copy_1 = this.readSlot_7.call$1(slot);
@@ -2406,7 +2460,7 @@ $$._convertDartToNative_PrepareForStructuredClone_walk = {"":
               $.indexSet(copy, i, this.call$1($.index(e, i)));
             return copy;
         }
-      throw $.$$throw($.CTC11);
+      throw $.$$throw($.CTC9);
   }
 }
 };
@@ -2419,14 +2473,40 @@ $$._convertDartToNative_PrepareForStructuredClone_walk_anon = {"":
 }
 };
 
-$$.addCheckboxHandler_anon = {"":
- ["checkbox_0"],
+$$.Maps__emitMap_anon = {"":
+ ["result_3", "box_0", "visiting_2"],
+ "super": "Closure",
+ call$2: function(k, v) {
+  var t1 = this.box_0;
+  if (t1.first_1 !== true)
+    $.add$1(this.result_3, ', ');
+  t1.first_1 = false;
+  t1 = this.result_3;
+  var t2 = this.visiting_2;
+  $.Collections__emitObject(k, t1, t2);
+  $.add$1(t1, ': ');
+  $.Collections__emitObject(v, t1, t2);
+}
+};
+
+$$.PasswordGenerator__addElementHandler_anon = {"":
+ ["this_1", "elem_0"],
  "super": "Closure",
  call$1: function(e) {
   var t1 = $.window().get$localStorage();
-  var t2 = this.checkbox_0;
+  var t2 = this.elem_0;
   $.indexSet(t1, t2.get$id(), $.toString(t2.get$checked()));
-  $.query('#generate').set$disabled(!$.canGenerate());
+  t1 = this.this_1;
+  var t3 = t1._canGenerate$0() !== true;
+  t1.get$_generate().set$disabled(t3);
+}
+};
+
+$$.PasswordGenerator__addElementHandler_anon0 = {"":
+ ["this_2"],
+ "super": "Closure",
+ call$1: function(e) {
+  this.this_2._generatePassword$0();
 }
 };
 
@@ -2524,9 +2604,9 @@ $$._convertNativeToDart_AcceptStructuredClone_walk = {"":
   if (typeof e !== 'object' || e === null || (e.constructor !== Array || !!e.immutable$list) && !e.is$JavaScriptIndexingBehavior())
     return this.call$1$bailout(1, e, 0, 0);
   if (e instanceof Date)
-    throw $.$$throw($.CTC4);
+    throw $.$$throw($.CTC2);
   if (e instanceof RegExp)
-    throw $.$$throw($.CTC5);
+    throw $.$$throw($.CTC3);
   if ($._isJavaScriptSimpleObject(e)) {
     var slot = this.findSlot_6.call$1(e);
     var copy = this.readSlot_5.call$1(slot);
@@ -2590,9 +2670,9 @@ $$._convertNativeToDart_AcceptStructuredClone_walk = {"":
       if (typeof e === 'string')
         return e;
       if (e instanceof Date)
-        throw $.$$throw($.CTC4);
+        throw $.$$throw($.CTC2);
       if (e instanceof RegExp)
-        throw $.$$throw($.CTC5);
+        throw $.$$throw($.CTC3);
     case 2:
       if (state === 2 || state === 0 && $._isJavaScriptSimpleObject(e))
         switch (state) {
@@ -3048,6 +3128,12 @@ $.FutureImpl_FutureImpl$immediate = function(value) {
   return res;
 };
 
+$.clear = function(receiver) {
+  if (!$.isJsArray(receiver))
+    return receiver.clear$0();
+  $.set$length(receiver, 0);
+};
+
 $._IDBOpenDBRequestEventsImpl$ = function(_ptr) {
   return new $._IDBOpenDBRequestEventsImpl(_ptr);
 };
@@ -3101,12 +3187,6 @@ $.constructorNameFallback = function(object) {
   }
   var string = Object.prototype.toString.call(object);
   return string.substring(8, string.length - 1);
-};
-
-$.clear = function(receiver) {
-  if (!$.isJsArray(receiver))
-    return receiver.clear$0();
-  $.set$length(receiver, 0);
 };
 
 $.NullPointerException$ = function(functionName, arguments$) {
@@ -3187,7 +3267,7 @@ $.stringReplaceAllUnchecked = function(receiver, from, to) {
       return $.toString(result);
     }
   else
-    return $.stringReplaceJS(receiver, $.regExpMakeNative($.JSSyntaxRegExp$(from.replace($.regExpMakeNative($.CTC13, true), "\\$&"), false, false), true), to);
+    return $.stringReplaceJS(receiver, $.regExpMakeNative($.JSSyntaxRegExp$(from.replace($.regExpMakeNative($.CTC14, true), "\\$&"), false, false), true), to);
 };
 
 $.and = function(a, b) {
@@ -3228,6 +3308,10 @@ $._DOMApplicationCacheEventsImpl$ = function(_ptr) {
 
 $.ExceptionImplementation$ = function(message) {
   return new $.ExceptionImplementation(message);
+};
+
+$.PasswordGenerator$ = function() {
+  return new $.PasswordGenerator(10, $.query('#lowerCase'), $.query('#upperCase'), $.query('#numbers'), $.query('#special'), $.query('#generate'), $.query('#password'));
 };
 
 $.invokeClosure = function(closure, isolate, numberOfArguments, arg1, arg2) {
@@ -3333,14 +3417,6 @@ $.checkMutable = function(list, reason) {
     throw $.$$throw($.UnsupportedOperationException$(reason));
 };
 
-$.canGenerate = function() {
-  var lowerCase = $.query('#lowerCase');
-  var upperCase = $.query('#upperCase');
-  var numbers = $.query('#numbers');
-  var special = $.query('#special');
-  return lowerCase.get$checked() === true || upperCase.get$checked() === true || numbers.get$checked() === true || special.get$checked() === true;
-};
-
 $.sub$slow = function(a, b) {
   if ($.checkNumbers(a, b))
     return a - b;
@@ -3371,7 +3447,7 @@ $.Primitives_objectHashCode = function(object) {
 
 $.$$throw = function(ex) {
   if (ex == null)
-    ex = $.CTC0;
+    ex = $.CTC;
   var jsError = new Error();
   jsError.name = ex;
   jsError.description = ex;
@@ -3431,7 +3507,7 @@ $.Futures_wait = function(futures) {
   if (typeof futures !== 'string' && (typeof futures !== 'object' || futures === null || futures.constructor !== Array && !futures.is$JavaScriptIndexingBehavior()))
     return $.Futures_wait$bailout(1, futures, t1);
   if ($.isEmpty(futures) === true)
-    return $.Future_Future$immediate($.CTC1);
+    return $.Future_Future$immediate($.CTC0);
   var completer = $.Completer_Completer();
   var result = completer.get$future();
   t1.remaining_1 = futures.length;
@@ -3537,12 +3613,6 @@ $.NoSuchMethodError_safeToString = function(object) {
   if (typeof object === 'string')
     return '"' + $.S($.replaceAll($.replaceAll($.replaceAll($.replaceAll(object, '\\', '\\\\'), '\n', '\\n'), '\r', '\\r'), '"', '\\"')) + '"';
   return $.Primitives_objectToString(object);
-};
-
-$.readCheckboxValue = function(checkbox) {
-  var saved = $.index($.window().get$localStorage(), checkbox.get$id());
-  if (!(saved == null))
-    checkbox.set$checked($.eqB(saved, 'true') && true);
 };
 
 $.Maps_mapToString = function(m) {
@@ -3660,10 +3730,6 @@ $._Manager$ = function() {
   return t1;
 };
 
-$.add = function(a, b) {
-  return typeof a === 'number' && typeof b === 'number' ? a + b : $.add$slow(a, b);
-};
-
 $.add$slow = function(a, b) {
   if ($.checkNumbers(a, b))
     return a + b;
@@ -3692,23 +3758,8 @@ $.Primitives_newList = function(length$) {
 };
 
 $.main = function() {
-  var lowerCase = $.query('#lowerCase');
-  var upperCase = $.query('#upperCase');
-  var numbers = $.query('#numbers');
-  var special = $.query('#special');
-  var generate = $.query('#generate');
-  $.readCheckboxValue(lowerCase);
-  $.readCheckboxValue(upperCase);
-  $.readCheckboxValue(numbers);
-  $.readCheckboxValue(special);
-  generate.set$disabled(!$.canGenerate());
-  $.addCheckboxHandler(lowerCase);
-  $.addCheckboxHandler(upperCase);
-  $.addCheckboxHandler(numbers);
-  $.addCheckboxHandler(special);
-  $.add$1(generate.get$on().get$click(), new $.main_anon());
-  if (generate.get$disabled() !== true)
-    $.generatePassword();
+  var generator = $.PasswordGenerator$();
+  generator.initialize$0();
 };
 
 $._AbstractWorkerEventsImpl$ = function(_ptr) {
@@ -3763,6 +3814,16 @@ $._IsolateContext$ = function() {
   var t1 = new $._IsolateContext(null, null, null);
   t1._IsolateContext$0();
   return t1;
+};
+
+$.add = function(a, b) {
+  return typeof a === 'number' && typeof b === 'number' ? a + b : $.add$slow(a, b);
+};
+
+$.iterator = function(receiver) {
+  if ($.isJsArray(receiver))
+    return $.ListIterator$(receiver);
+  return receiver.iterator$0();
 };
 
 $.dynamicSetMetadata = function(inputTable) {
@@ -3850,6 +3911,12 @@ $._InputElementEventsImpl$ = function(_ptr) {
   return new $._InputElementEventsImpl(_ptr);
 };
 
+$.isEmpty = function(receiver) {
+  if (typeof receiver === 'string' || $.isJsArray(receiver))
+    return receiver.length === 0;
+  return receiver.isEmpty$0();
+};
+
 $._DoubleLinkedQueueIterator$ = function(_sentinel) {
   var t1 = new $._DoubleLinkedQueueIterator(_sentinel, null);
   t1._DoubleLinkedQueueIterator$1(_sentinel);
@@ -3880,7 +3947,7 @@ $._dynamicMetadata0 = function() {
 };
 
 $.Random_Random = function(seed) {
-  return $.CTC14;
+  return $.CTC12;
 };
 
 $.LinkedHashMapImplementation$ = function() {
@@ -3903,7 +3970,7 @@ $._PendingSendPortFinder$ = function() {
 
 $.checkNull = function(object) {
   if (object == null)
-    throw $.$$throw($.NullPointerException$(null, $.CTC1));
+    throw $.$$throw($.NullPointerException$(null, $.CTC0));
   return object;
 };
 
@@ -3925,10 +3992,6 @@ $._fillStatics = function(context) {
 
 };
 
-$.addCheckboxHandler = function(checkbox) {
-  $.add$1(checkbox.get$on().get$click(), new $.addCheckboxHandler_anon(checkbox));
-};
-
 $._WindowEventsImpl$ = function(_ptr) {
   return new $._WindowEventsImpl(_ptr);
 };
@@ -3937,12 +4000,6 @@ $.DoubleLinkedQueue$ = function() {
   var t1 = new $.DoubleLinkedQueue(null);
   t1.DoubleLinkedQueue$0();
   return t1;
-};
-
-$.isEmpty = function(receiver) {
-  if (typeof receiver === 'string' || $.isJsArray(receiver))
-    return receiver.length === 0;
-  return receiver.isEmpty$0();
 };
 
 $.checkNumbers = function(a, b) {
@@ -3984,6 +4041,12 @@ $.index$slow = function(a, index) {
   return a.operator$index$1(index);
 };
 
+$.DoubleLinkedQueueEntry$ = function(e) {
+  var t1 = new $.DoubleLinkedQueueEntry(null, null, null);
+  t1.DoubleLinkedQueueEntry$1(e);
+  return t1;
+};
+
 $.toString = function(value) {
   if (typeof value == "object" && value !== null)
     if ($.isJsArray(value))
@@ -4018,12 +4081,6 @@ $._ReceivePortImpl$ = function() {
 $.contains$2 = function(receiver, other, startIndex) {
   $.checkNull(other);
   return $.stringContainsUnchecked(receiver, other, startIndex);
-};
-
-$.DoubleLinkedQueueEntry$ = function(e) {
-  var t1 = new $.DoubleLinkedQueueEntry(null, null, null);
-  t1.DoubleLinkedQueueEntry$1(e);
-  return t1;
 };
 
 $._MainManagerStub$ = function() {
@@ -4064,6 +4121,16 @@ $.StringImplementation__toJsStringArray = function(strings) {
     }
   }
   return array;
+};
+
+$.removeLast = function(receiver) {
+  if ($.isJsArray(receiver)) {
+    $.checkGrowable(receiver, 'removeLast');
+    if ($.get$length(receiver) === 0)
+      throw $.$$throw($.IndexOutOfRangeException$(-1));
+    return receiver.pop();
+  }
+  return receiver.removeLast$0();
 };
 
 $.IndexOutOfRangeException$ = function(_value) {
@@ -4123,38 +4190,6 @@ $.KeyValuePair$ = function(key, value) {
   return new $.KeyValuePair(key, value);
 };
 
-$.generatePassword = function() {
-  var lowerCase = $.query('#lowerCase');
-  var upperCase = $.query('#upperCase');
-  var numbers = $.query('#numbers');
-  var special = $.query('#special');
-  $.query('#generate');
-  var password = $.query('#password');
-  var charPool = $.StringBuffer_StringBuffer('');
-  if (lowerCase.get$checked() === true)
-    $.add$1(charPool, 'abcdefghijklmnopqrstuvwxyz');
-  if (upperCase.get$checked() === true)
-    $.add$1(charPool, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-  if (numbers.get$checked() === true)
-    $.add$1(charPool, '0123456789');
-  if (special.get$checked() === true)
-    $.add$1(charPool, '!"#$%&\'()*+,-\'./:;<=>?@[\\]^_{|}~');
-  var charCodes = $.charCodes($.toString(charPool));
-  if (typeof charCodes !== 'string' && (typeof charCodes !== 'object' || charCodes === null || charCodes.constructor !== Array && !charCodes.is$JavaScriptIndexingBehavior()))
-    return $.generatePassword$bailout(1, password, charPool, charCodes);
-  var random = $.Random_Random(null);
-  var result = $.StringBuffer_StringBuffer('');
-  for (var i = 0; i < 10; ++i) {
-    var t1 = random.nextInt$1($.get$length(charPool));
-    if (t1 !== (t1 | 0))
-      throw $.iae(t1);
-    if (t1 < 0 || t1 >= charCodes.length)
-      throw $.ioore(t1);
-    result.addCharCode$1(charCodes[t1]);
-  }
-  password.set$value($.toString(result));
-};
-
 $._MediaStreamEventsImpl$ = function(_ptr) {
   return new $._MediaStreamEventsImpl(_ptr);
 };
@@ -4163,15 +4198,17 @@ $._NativeJsSendPort$ = function(_receivePort, isolateId) {
   return new $._NativeJsSendPort(_receivePort, isolateId);
 };
 
+$.checkString = function(value) {
+  if (!(typeof value === 'string')) {
+    $.checkNull(value);
+    throw $.$$throw($.IllegalArgumentException$(value));
+  }
+  return value;
+};
+
 $.defineProperty = function(obj, property, value) {
   Object.defineProperty(obj, property,
       {value: value, enumerable: false, writable: true, configurable: true});
-};
-
-$.iterator = function(receiver) {
-  if ($.isJsArray(receiver))
-    return $.ListIterator$(receiver);
-  return receiver.iterator$0();
 };
 
 $.dynamicFunction = function(name$) {
@@ -4186,14 +4223,6 @@ $.dynamicFunction = function(name$) {
   bind.methods = methods;
   $.defineProperty(Object.prototype, name$, bind);
   return methods;
-};
-
-$.checkString = function(value) {
-  if (!(typeof value === 'string')) {
-    $.checkNull(value);
-    throw $.$$throw($.IllegalArgumentException$(value));
-  }
-  return value;
 };
 
 $._callInIsolate = function(isolate, function$) {
@@ -4303,11 +4332,6 @@ $.Collections_forEach = function(iterable, f) {
     f.call$1(t1.next$0());
 };
 
-$._Collections_forEach = function(iterable, f) {
-  for (var t1 = $.iterator(iterable); t1.hasNext$0() === true;)
-    f.call$1(t1.next$0());
-};
-
 $.hashCode = function(receiver) {
   if (typeof receiver === 'number')
     return receiver & 0x1FFFFFFF;
@@ -4323,16 +4347,6 @@ $.hashCode = function(receiver) {
   hash0 = 536870911 & hash + 67108863 & hash << 3;
   hash0 = (hash0 ^ $.shr(hash0, 11)) >>> 0;
   return 536870911 & hash0 + 16383 & hash0 << 15;
-};
-
-$.removeLast = function(receiver) {
-  if ($.isJsArray(receiver)) {
-    $.checkGrowable(receiver, 'removeLast');
-    if ($.get$length(receiver) === 0)
-      throw $.$$throw($.IndexOutOfRangeException$(-1));
-    return receiver.pop();
-  }
-  return receiver.removeLast$0();
 };
 
 $._JsVisitedMap$ = function() {
@@ -4353,6 +4367,11 @@ $.startsWith = function(receiver, other) {
   if (length$ > receiver.length)
     return false;
   return other == receiver.substring(0, length$);
+};
+
+$._Collections_forEach = function(iterable, f) {
+  for (var t1 = $.iterator(iterable); t1.hasNext$0() === true;)
+    f.call$1(t1.next$0());
 };
 
 $.toStringForNativeObject = function(obj) {
@@ -4523,7 +4542,7 @@ $.unwrapException = function(ex) {
       if (typeof name$ === 'string' && $.startsWith(name$, 'call$') === true)
         return $.ObjectNotClosureException$();
       else
-        return $.NullPointerException$(null, $.CTC1);
+        return $.NullPointerException$(null, $.CTC0);
     else if ($.eqB(type, 'undefined_method'))
       if (typeof name$ === 'string' && $.startsWith(name$, 'call$') === true)
         return $.ObjectNotClosureException$();
@@ -4533,7 +4552,7 @@ $.unwrapException = function(ex) {
     var ieFacilityNumber = ex.number>>16 & 0x1FFF;
     if (typeof message === 'string')
       if ($.endsWith(message, 'is null') === true || $.endsWith(message, 'is undefined') === true || $.endsWith(message, 'is null or undefined') === true)
-        return $.NullPointerException$(null, $.CTC1);
+        return $.NullPointerException$(null, $.CTC0);
       else {
         if ($.contains$1(message, ' is not a function') !== true)
           var t1 = ieErrorCode === 438 && ieFacilityNumber === 10;
@@ -4573,14 +4592,6 @@ $.sub = function(a, b) {
   return typeof a === 'number' && typeof b === 'number' ? a - b : $.sub$slow(a, b);
 };
 
-$.generatePassword$bailout = function(state, password, charPool, charCodes) {
-  var random = $.Random_Random(null);
-  var result = $.StringBuffer_StringBuffer('');
-  for (var i = 0; i < 10; ++i)
-    result.addCharCode$1($.index(charCodes, random.nextInt$1($.get$length(charPool))));
-  password.set$value($.toString(result));
-};
-
 $.StringImplementation__toJsStringArray$bailout = function(state, strings) {
   $.checkNull(strings);
   var length$ = $.get$length(strings);
@@ -4609,7 +4620,7 @@ $.StringImplementation__toJsStringArray$bailout = function(state, strings) {
 
 $.Futures_wait$bailout = function(state, futures, t1) {
   if ($.isEmpty(futures) === true)
-    return $.Future_Future$immediate($.CTC1);
+    return $.Future_Future$immediate($.CTC0);
   var completer = $.Completer_Completer();
   var result = completer.get$future();
   t1.remaining_1 = $.get$length(futures);
@@ -4649,41 +4660,41 @@ Isolate.makeConstantList = function(list) {
   list.fixed$length = true;
   return list;
 };
-$.CTC1 = Isolate.makeConstantList([]);
+$.CTC0 = Isolate.makeConstantList([]);
 $.CTC19 = 'structured clone of RegExp';
-$.CTC5 = new Isolate.$isolateProperties.NotImplementedException('structured clone of RegExp');
+$.CTC3 = new Isolate.$isolateProperties.NotImplementedException('structured clone of RegExp');
 $.CTC20 = 'structured clone of File';
-$.CTC6 = new Isolate.$isolateProperties.NotImplementedException('structured clone of File');
+$.CTC4 = new Isolate.$isolateProperties.NotImplementedException('structured clone of File');
 $.CTC21 = 'IDBKey containing Date';
 $.CTC18 = new Isolate.$isolateProperties.NotImplementedException('IDBKey containing Date');
 $.CTC22 = 'Cannot removeLast on immutable List.';
-$.CTC3 = new Isolate.$isolateProperties.UnsupportedOperationException('Cannot removeLast on immutable List.');
+$.CTC11 = new Isolate.$isolateProperties.UnsupportedOperationException('Cannot removeLast on immutable List.');
 $.CTC23 = 'structured clone of ArrayBufferView';
-$.CTC10 = new Isolate.$isolateProperties.NotImplementedException('structured clone of ArrayBufferView');
+$.CTC8 = new Isolate.$isolateProperties.NotImplementedException('structured clone of ArrayBufferView');
 $.CTC24 = 'structured clone of Date';
-$.CTC4 = new Isolate.$isolateProperties.NotImplementedException('structured clone of Date');
+$.CTC2 = new Isolate.$isolateProperties.NotImplementedException('structured clone of Date');
 $.CTC25 = 'structured clone of ArrayBuffer';
-$.CTC9 = new Isolate.$isolateProperties.NotImplementedException('structured clone of ArrayBuffer');
+$.CTC7 = new Isolate.$isolateProperties.NotImplementedException('structured clone of ArrayBuffer');
 $.CTC16 = new Isolate.$isolateProperties._DeletedKeySentinel();
 $.CTC26 = 'structured clone of FileList';
-$.CTC8 = new Isolate.$isolateProperties.NotImplementedException('structured clone of FileList');
+$.CTC6 = new Isolate.$isolateProperties.NotImplementedException('structured clone of FileList');
 $.CTC27 = 'structured clone of other type';
-$.CTC11 = new Isolate.$isolateProperties.NotImplementedException('structured clone of other type');
-$.CTC14 = new Isolate.$isolateProperties._Random();
+$.CTC9 = new Isolate.$isolateProperties.NotImplementedException('structured clone of other type');
+$.CTC12 = new Isolate.$isolateProperties._Random();
 $.CTC15 = new Isolate.$isolateProperties.Object();
 $.CTC28 = 'structured clone of Blob';
-$.CTC7 = new Isolate.$isolateProperties.NotImplementedException('structured clone of Blob');
+$.CTC5 = new Isolate.$isolateProperties.NotImplementedException('structured clone of Blob');
 $.CTC29 = false;
 $.CTC30 = '^#[_a-zA-Z]\\w*$';
-$.CTC12 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, '^#[_a-zA-Z]\\w*$');
+$.CTC13 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, '^#[_a-zA-Z]\\w*$');
 $.CTC31 = null;
-$.CTC0 = new Isolate.$isolateProperties.NullPointerException(null, Isolate.$isolateProperties.CTC1);
-$.CTC2 = new Isolate.$isolateProperties.NoMoreElementsException();
+$.CTC = new Isolate.$isolateProperties.NullPointerException(null, Isolate.$isolateProperties.CTC0);
+$.CTC10 = new Isolate.$isolateProperties.NoMoreElementsException();
 $.CTC17 = new Isolate.$isolateProperties.EmptyQueueException();
 $.CTC32 = 'Cannot add to immutable List.';
-$.CTC = new Isolate.$isolateProperties.UnsupportedOperationException('Cannot add to immutable List.');
+$.CTC1 = new Isolate.$isolateProperties.UnsupportedOperationException('Cannot add to immutable List.');
 $.CTC33 = '[-[\\]{}()*+?.,\\\\^$|#\\s]';
-$.CTC13 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, '[-[\\]{}()*+?.,\\\\^$|#\\s]');
+$.CTC14 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, '[-[\\]{}()*+?.,\\\\^$|#\\s]');
 $.HashMapImplementation__INITIAL_CAPACITY = 8;
 $.Primitives_DOLLAR_CHAR_VALUE = 36;
 $.HashMapImplementation__DELETED_KEY = Isolate.$isolateProperties.CTC16;
@@ -4765,7 +4776,7 @@ $.$defineNativeClass('AbstractWorker', [], {
 }
 });
 
-$.$defineNativeClass('HTMLAnchorElement', [], {
+$.$defineNativeClass('HTMLAnchorElement', ["type?"], {
  toString$0: function() {
   return this.toString();
 }
@@ -4815,7 +4826,10 @@ $.$defineNativeClass('BatteryManager', [], {
 }
 });
 
-$.$defineNativeClass('Blob', [], {
+$.$defineNativeClass('BiquadFilterNode', ["type?"], {
+});
+
+$.$defineNativeClass('Blob', ["type?"], {
  is$_BlobImpl: function() { return true; },
  is$Blob: function() { return true; }
 });
@@ -4826,13 +4840,16 @@ $.$defineNativeClass('HTMLBodyElement', [], {
 }
 });
 
-$.$defineNativeClass('HTMLButtonElement', ["disabled=", "value="], {
+$.$defineNativeClass('HTMLButtonElement', ["disabled=", "type?", "value="], {
 });
 
 $.$defineNativeClass('WebKitCSSMatrix', [], {
  toString$0: function() {
   return this.toString();
 }
+});
+
+$.$defineNativeClass('CSSRule', ["type?"], {
 });
 
 $.$defineNativeClass('CSSRuleList', ["length?"], {
@@ -4846,10 +4863,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -4858,7 +4875,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -4891,10 +4908,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -4903,7 +4920,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -4924,10 +4941,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -4936,7 +4953,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -4973,10 +4990,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -4985,11 +5002,14 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
  is$Collection: function() { return true; }
+});
+
+$.$defineNativeClass('DOMMimeType', ["type?"], {
 });
 
 $.$defineNativeClass('DOMPluginArray', ["length?"], {
@@ -5003,10 +5023,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -5015,7 +5035,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -5025,7 +5045,7 @@ return this[index];
 $.$defineNativeClass('DOMPlugin', ["length?"], {
 });
 
-$.$defineNativeClass('DOMSelection', [], {
+$.$defineNativeClass('DOMSelection', ["type?"], {
  toString$0: function() {
   return this.toString();
 }
@@ -5045,10 +5065,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -5057,7 +5077,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -5074,6 +5094,9 @@ $.$defineNativeClass('DOMTokenList', ["length?"], {
  toString$0: function() {
   return this.toString();
 }
+});
+
+$.$defineNativeClass('DataTransferItem', ["type?"], {
 });
 
 $.$defineNativeClass('DataTransferItemList', ["length?"], {
@@ -5136,7 +5159,7 @@ $.$defineNativeClass('HTMLDocument', [], {
   return this.querySelector(selectors);
 },
  query$1: function(selectors) {
-  if ($.CTC12.hasMatch$1(selectors) === true)
+  if ($.CTC13.hasMatch$1(selectors) === true)
     return this.$dom_getElementById$1($.substring$1(selectors, 1));
   return this.$dom_querySelector$1(selectors);
 }
@@ -5165,6 +5188,9 @@ $.$defineNativeClass('Element', ["id?"], {
 }
 });
 
+$.$defineNativeClass('HTMLEmbedElement', ["type?"], {
+});
+
 $.$defineNativeClass('EntryArray', ["length?"], {
  operator$index$1: function(index) {
 return this[index];
@@ -5176,10 +5202,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -5188,7 +5214,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -5206,10 +5232,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -5218,7 +5244,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -5245,6 +5271,9 @@ $.$defineNativeClass('EventException', [], {
  toString$0: function() {
   return this.toString();
 }
+});
+
+$.$defineNativeClass('Event', ["type?"], {
 });
 
 $.$defineNativeClass('EventSource', [], {
@@ -5295,7 +5324,7 @@ $.$defineNativeClass('EventTarget', [], {
 }
 });
 
-$.$defineNativeClass('HTMLFieldSetElement', ["disabled="], {
+$.$defineNativeClass('HTMLFieldSetElement', ["disabled=", "type?"], {
 });
 
 $.$defineNativeClass('FileException', [], {
@@ -5321,10 +5350,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -5333,7 +5362,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$_FileListImpl: function() { return true; },
  is$JavaScriptIndexingBehavior: function() { return true; },
@@ -5380,10 +5409,10 @@ this[index] = value
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -5392,7 +5421,7 @@ this[index] = value
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -5411,10 +5440,10 @@ this[index] = value
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -5423,7 +5452,7 @@ this[index] = value
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -5457,10 +5486,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -5469,7 +5498,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -5487,10 +5516,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -5499,7 +5528,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -5517,10 +5546,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -5529,7 +5558,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -5594,9 +5623,9 @@ return this.key;
 
 $.$defineNativeClass('IDBCursorWithValue', [], {
  get$value: function() {
-  return $._convertNativeToDart_IDBAny(this.get$_lib_value());
+  return $._convertNativeToDart_IDBAny(this.get$_lib0_value());
 },
- get$_lib_value: function() {
+ get$_lib0_value: function() {
 return this.value;
 }
 });
@@ -5723,7 +5752,7 @@ $.$defineNativeClass('HTMLImageElement', [], {
  complete$1: function(arg0) { return this.complete.call$1(arg0); }
 });
 
-$.$defineNativeClass('HTMLInputElement', ["checked=", "disabled=", "value="], {
+$.$defineNativeClass('HTMLInputElement', ["checked=", "disabled=", "type?", "value="], {
  get$on: function() {
   return $._InputElementEventsImpl$(this);
 }
@@ -5740,10 +5769,10 @@ this[index] = value
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -5752,7 +5781,7 @@ this[index] = value
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -5771,10 +5800,10 @@ this[index] = value
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -5783,7 +5812,7 @@ this[index] = value
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -5802,10 +5831,10 @@ this[index] = value
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -5814,7 +5843,7 @@ this[index] = value
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -5834,13 +5863,16 @@ $.$defineNativeClass('JavaScriptAudioNode', [], {
 }
 });
 
-$.$defineNativeClass('HTMLKeygenElement', ["disabled="], {
+$.$defineNativeClass('JavaScriptCallFrame', ["type?"], {
 });
 
-$.$defineNativeClass('HTMLLIElement', ["value="], {
+$.$defineNativeClass('HTMLKeygenElement', ["disabled=", "type?"], {
 });
 
-$.$defineNativeClass('HTMLLinkElement', ["disabled="], {
+$.$defineNativeClass('HTMLLIElement', ["type?", "value="], {
+});
+
+$.$defineNativeClass('HTMLLinkElement', ["disabled=", "type?"], {
 });
 
 $.$defineNativeClass('LocalMediaStream', [], {
@@ -5884,10 +5916,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -5896,7 +5928,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -5949,10 +5981,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -5961,7 +5993,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -6025,6 +6057,9 @@ $.$defineNativeClass('MessagePort', [], {
 $.$defineNativeClass('HTMLMeterElement', ["value="], {
 });
 
+$.$defineNativeClass('MutationRecord', ["type?"], {
+});
+
 $.$defineNativeClass('NamedNodeMap', ["length?"], {
  operator$index$1: function(index) {
 return this[index];
@@ -6036,10 +6071,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -6048,7 +6083,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -6208,16 +6243,25 @@ $.$defineNativeClass('Notification', [], {
 }
 });
 
+$.$defineNativeClass('HTMLOListElement', ["type?"], {
+});
+
+$.$defineNativeClass('HTMLObjectElement', ["type?"], {
+});
+
 $.$defineNativeClass('HTMLOptGroupElement', ["disabled="], {
 });
 
 $.$defineNativeClass('HTMLOptionElement', ["disabled=", "value="], {
 });
 
-$.$defineNativeClass('HTMLOutputElement', ["value="], {
+$.$defineNativeClass('Oscillator', ["type?"], {
 });
 
-$.$defineNativeClass('HTMLParamElement', ["value="], {
+$.$defineNativeClass('HTMLOutputElement', ["type?", "value="], {
+});
+
+$.$defineNativeClass('HTMLParamElement', ["type?", "value="], {
 });
 
 $.$defineNativeClass('PeerConnection00', [], {
@@ -6233,6 +6277,9 @@ $.$defineNativeClass('PeerConnection00', [], {
  $dom_removeEventListener$3: function(type, listener, useCapture) {
   return this.removeEventListener(type,$.convertDartClosureToJS(listener, 1),useCapture);
 }
+});
+
+$.$defineNativeClass('PerformanceNavigation', ["type?"], {
 });
 
 $.$defineNativeClass('HTMLProgressElement', ["value="], {
@@ -6253,6 +6300,9 @@ $.$defineNativeClass('RTCPeerConnection', [], {
 }
 });
 
+$.$defineNativeClass('RTCSessionDescription', ["type?"], {
+});
+
 $.$defineNativeClass('RadioNodeList', ["value="], {
  operator$index$1: function(index) {
 return this[index];
@@ -6264,10 +6314,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -6279,7 +6329,7 @@ return this[index];
   return this.operator$index$1($.sub($.get$length(this), 1));
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -6315,10 +6365,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -6327,7 +6377,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -6345,10 +6395,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -6357,7 +6407,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -6375,10 +6425,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -6387,11 +6437,14 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
  is$Collection: function() { return true; }
+});
+
+$.$defineNativeClass('SVGComponentTransferFunctionElement', ["type?"], {
 });
 
 $.$defineNativeClass('SVGElement', [], {
@@ -6417,10 +6470,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -6429,7 +6482,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -6440,6 +6493,12 @@ $.$defineNativeClass('SVGException', [], {
  toString$0: function() {
   return this.toString();
 }
+});
+
+$.$defineNativeClass('SVGFEColorMatrixElement', ["type?"], {
+});
+
+$.$defineNativeClass('SVGFETurbulenceElement', ["type?"], {
 });
 
 $.$defineNativeClass('SVGLength', ["value="], {
@@ -6456,10 +6515,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -6468,7 +6527,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  clear$0: function() {
   return this.clear();
@@ -6492,10 +6551,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -6504,7 +6563,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  clear$0: function() {
   return this.clear();
@@ -6525,10 +6584,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -6537,7 +6596,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  clear$0: function() {
   return this.clear();
@@ -6553,6 +6612,9 @@ $.$defineNativeClass('SVGPointList', [], {
 }
 });
 
+$.$defineNativeClass('SVGScriptElement', ["type?"], {
+});
+
 $.$defineNativeClass('SVGStringList', [], {
  operator$index$1: function(index) {
 return this[index];
@@ -6564,10 +6626,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -6576,7 +6638,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  clear$0: function() {
   return this.clear();
@@ -6586,7 +6648,10 @@ return this[index];
  is$Collection: function() { return true; }
 });
 
-$.$defineNativeClass('SVGStyleElement', ["disabled="], {
+$.$defineNativeClass('SVGStyleElement', ["disabled=", "type?"], {
+});
+
+$.$defineNativeClass('SVGTransform', ["type?"], {
 });
 
 $.$defineNativeClass('SVGTransformList', [], {
@@ -6600,10 +6665,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -6612,7 +6677,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  clear$0: function() {
   return this.clear();
@@ -6622,7 +6687,10 @@ return this[index];
  is$Collection: function() { return true; }
 });
 
-$.$defineNativeClass('HTMLSelectElement', ["disabled=", "length=", "value="], {
+$.$defineNativeClass('HTMLScriptElement', ["type?"], {
+});
+
+$.$defineNativeClass('HTMLSelectElement', ["disabled=", "length=", "type?", "value="], {
 });
 
 $.$defineNativeClass('SharedWorkerContext', [], {
@@ -6642,10 +6710,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -6654,7 +6722,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  $dom_addEventListener$3: function(type, listener, useCapture) {
   return this.addEventListener(type,$.convertDartClosureToJS(listener, 1),useCapture);
@@ -6665,6 +6733,9 @@ return this[index];
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
  is$Collection: function() { return true; }
+});
+
+$.$defineNativeClass('HTMLSourceElement', ["type?"], {
 });
 
 $.$defineNativeClass('SpeechGrammarList', ["length?"], {
@@ -6678,10 +6749,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -6690,7 +6761,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -6708,10 +6779,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -6720,7 +6791,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -6753,10 +6824,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -6765,7 +6836,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -6838,10 +6909,13 @@ return this.length;
  is$Map: function() { return true; }
 });
 
-$.$defineNativeClass('HTMLStyleElement', ["disabled="], {
+$.$defineNativeClass('HTMLStyleElement', ["disabled=", "type?"], {
 });
 
-$.$defineNativeClass('StyleSheet', ["disabled="], {
+$.$defineNativeClass('StyleMedia', ["type?"], {
+});
+
+$.$defineNativeClass('StyleSheet', ["disabled=", "type?"], {
 });
 
 $.$defineNativeClass('StyleSheetList', ["length?"], {
@@ -6855,10 +6929,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -6867,14 +6941,14 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
  is$Collection: function() { return true; }
 });
 
-$.$defineNativeClass('HTMLTextAreaElement', ["disabled=", "value="], {
+$.$defineNativeClass('HTMLTextAreaElement', ["disabled=", "type?", "value="], {
 });
 
 $.$defineNativeClass('TextTrackCue', ["id?", "text!"], {
@@ -6900,10 +6974,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -6912,7 +6986,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -6945,10 +7019,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -6957,7 +7031,7 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  $dom_addEventListener$3: function(type, listener, useCapture) {
   return this.addEventListener(type,$.convertDartClosureToJS(listener, 1),useCapture);
@@ -6984,10 +7058,10 @@ return this[index];
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -6996,11 +7070,14 @@ return this[index];
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
  is$Collection: function() { return true; }
+});
+
+$.$defineNativeClass('HTMLUListElement', ["type?"], {
 });
 
 $.$defineNativeClass('Uint16Array', ["length?"], {
@@ -7014,10 +7091,10 @@ this[index] = value
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -7026,7 +7103,7 @@ this[index] = value
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -7045,10 +7122,10 @@ this[index] = value
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -7057,7 +7134,7 @@ this[index] = value
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -7076,10 +7153,10 @@ this[index] = value
   return $._FixedSizeListIterator$(this);
 },
  add$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  addLast$1: function(value) {
-  throw $.$$throw($.CTC);
+  throw $.$$throw($.CTC1);
 },
  forEach$1: function(f) {
   return $._Collections_forEach(this, f);
@@ -7088,7 +7165,7 @@ this[index] = value
   return $.eq($.get$length(this), 0);
 },
  removeLast$0: function() {
-  throw $.$$throw($.CTC3);
+  throw $.$$throw($.CTC11);
 },
  is$JavaScriptIndexingBehavior: function() { return true; },
  is$List: function() { return true; },
@@ -7100,6 +7177,9 @@ $.$defineNativeClass('Uint8ClampedArray', [], {
  is$List: function() { return true; },
  is$Collection: function() { return true; },
  is$ArrayBufferView: function() { return true; }
+});
+
+$.$defineNativeClass('WebGLActiveInfo', ["type?"], {
 });
 
 $.$defineNativeClass('WebKitCSSFilterValue', [], {
@@ -7231,46 +7311,50 @@ $.$defineNativeClass('DOMWindow', [], {
 }
 });
 
-// 162 dynamic classes.
-// 312 classes
-// 30 !leaf
+// 185 dynamic classes.
+// 370 classes
+// 35 !leaf
 (function(){
-  var v0/*class(_SVGElementImpl)*/ = 'SVGElement|SVGViewElement|SVGVKernElement|SVGUseElement|SVGTitleElement|SVGTextContentElement|SVGTextPositioningElement|SVGTextElement|SVGTSpanElement|SVGTRefElement|SVGAltGlyphElement|SVGTextElement|SVGTSpanElement|SVGTRefElement|SVGAltGlyphElement|SVGTextPathElement|SVGTextPositioningElement|SVGTextElement|SVGTSpanElement|SVGTRefElement|SVGAltGlyphElement|SVGTextElement|SVGTSpanElement|SVGTRefElement|SVGAltGlyphElement|SVGTextPathElement|SVGSymbolElement|SVGSwitchElement|SVGStyleElement|SVGStopElement|SVGScriptElement|SVGSVGElement|SVGRectElement|SVGPolylineElement|SVGPolygonElement|SVGPatternElement|SVGPathElement|SVGMissingGlyphElement|SVGMetadataElement|SVGMaskElement|SVGMarkerElement|SVGMPathElement|SVGLineElement|SVGImageElement|SVGHKernElement|SVGGradientElement|SVGRadialGradientElement|SVGLinearGradientElement|SVGRadialGradientElement|SVGLinearGradientElement|SVGGlyphRefElement|SVGGlyphElement|SVGGElement|SVGForeignObjectElement|SVGFontFaceUriElement|SVGFontFaceSrcElement|SVGFontFaceNameElement|SVGFontFaceFormatElement|SVGFontFaceElement|SVGFontElement|SVGFilterElement|SVGFETurbulenceElement|SVGFETileElement|SVGFESpotLightElement|SVGFESpecularLightingElement|SVGFEPointLightElement|SVGFEOffsetElement|SVGFEMorphologyElement|SVGFEMergeNodeElement|SVGFEMergeElement|SVGFEImageElement|SVGFEGaussianBlurElement|SVGFEFloodElement|SVGFEDropShadowElement|SVGFEDistantLightElement|SVGFEDisplacementMapElement|SVGFEDiffuseLightingElement|SVGFEConvolveMatrixElement|SVGFECompositeElement|SVGFEComponentTransferElement|SVGFEColorMatrixElement|SVGFEBlendElement|SVGEllipseElement|SVGDescElement|SVGDefsElement|SVGCursorElement|SVGComponentTransferFunctionElement|SVGFEFuncRElement|SVGFEFuncGElement|SVGFEFuncBElement|SVGFEFuncAElement|SVGFEFuncRElement|SVGFEFuncGElement|SVGFEFuncBElement|SVGFEFuncAElement|SVGClipPathElement|SVGCircleElement|SVGAnimationElement|SVGSetElement|SVGAnimateTransformElement|SVGAnimateMotionElement|SVGAnimateElement|SVGAnimateColorElement|SVGSetElement|SVGAnimateTransformElement|SVGAnimateMotionElement|SVGAnimateElement|SVGAnimateColorElement|SVGAltGlyphItemElement|SVGAltGlyphDefElement|SVGAElement|SVGViewElement|SVGVKernElement|SVGUseElement|SVGTitleElement|SVGTextContentElement|SVGTextPositioningElement|SVGTextElement|SVGTSpanElement|SVGTRefElement|SVGAltGlyphElement|SVGTextElement|SVGTSpanElement|SVGTRefElement|SVGAltGlyphElement|SVGTextPathElement|SVGTextPositioningElement|SVGTextElement|SVGTSpanElement|SVGTRefElement|SVGAltGlyphElement|SVGTextElement|SVGTSpanElement|SVGTRefElement|SVGAltGlyphElement|SVGTextPathElement|SVGSymbolElement|SVGSwitchElement|SVGStyleElement|SVGStopElement|SVGScriptElement|SVGSVGElement|SVGRectElement|SVGPolylineElement|SVGPolygonElement|SVGPatternElement|SVGPathElement|SVGMissingGlyphElement|SVGMetadataElement|SVGMaskElement|SVGMarkerElement|SVGMPathElement|SVGLineElement|SVGImageElement|SVGHKernElement|SVGGradientElement|SVGRadialGradientElement|SVGLinearGradientElement|SVGRadialGradientElement|SVGLinearGradientElement|SVGGlyphRefElement|SVGGlyphElement|SVGGElement|SVGForeignObjectElement|SVGFontFaceUriElement|SVGFontFaceSrcElement|SVGFontFaceNameElement|SVGFontFaceFormatElement|SVGFontFaceElement|SVGFontElement|SVGFilterElement|SVGFETurbulenceElement|SVGFETileElement|SVGFESpotLightElement|SVGFESpecularLightingElement|SVGFEPointLightElement|SVGFEOffsetElement|SVGFEMorphologyElement|SVGFEMergeNodeElement|SVGFEMergeElement|SVGFEImageElement|SVGFEGaussianBlurElement|SVGFEFloodElement|SVGFEDropShadowElement|SVGFEDistantLightElement|SVGFEDisplacementMapElement|SVGFEDiffuseLightingElement|SVGFEConvolveMatrixElement|SVGFECompositeElement|SVGFEComponentTransferElement|SVGFEColorMatrixElement|SVGFEBlendElement|SVGEllipseElement|SVGDescElement|SVGDefsElement|SVGCursorElement|SVGComponentTransferFunctionElement|SVGFEFuncRElement|SVGFEFuncGElement|SVGFEFuncBElement|SVGFEFuncAElement|SVGFEFuncRElement|SVGFEFuncGElement|SVGFEFuncBElement|SVGFEFuncAElement|SVGClipPathElement|SVGCircleElement|SVGAnimationElement|SVGSetElement|SVGAnimateTransformElement|SVGAnimateMotionElement|SVGAnimateElement|SVGAnimateColorElement|SVGSetElement|SVGAnimateTransformElement|SVGAnimateMotionElement|SVGAnimateElement|SVGAnimateColorElement|SVGAltGlyphItemElement|SVGAltGlyphDefElement|SVGAElement';
-  var v1/*class(_MediaElementImpl)*/ = 'HTMLMediaElement|HTMLVideoElement|HTMLAudioElement|HTMLVideoElement|HTMLAudioElement';
-  var v2/*class(_Uint8ArrayImpl)*/ = 'Uint8Array|Uint8ClampedArray|Uint8ClampedArray';
-  var v3/*class(_ElementImpl)*/ = [v0/*class(_SVGElementImpl)*/,v1/*class(_MediaElementImpl)*/,v0/*class(_SVGElementImpl)*/,v1/*class(_MediaElementImpl)*/,'Element|HTMLUnknownElement|HTMLUListElement|HTMLTrackElement|HTMLTitleElement|HTMLTextAreaElement|HTMLTableSectionElement|HTMLTableRowElement|HTMLTableElement|HTMLTableColElement|HTMLTableCellElement|HTMLTableCaptionElement|HTMLStyleElement|HTMLSpanElement|HTMLSourceElement|HTMLShadowElement|HTMLSelectElement|HTMLScriptElement|HTMLQuoteElement|HTMLProgressElement|HTMLPreElement|HTMLParamElement|HTMLParagraphElement|HTMLOutputElement|HTMLOptionElement|HTMLOptGroupElement|HTMLObjectElement|HTMLOListElement|HTMLModElement|HTMLMeterElement|HTMLMetaElement|HTMLMenuElement|HTMLMarqueeElement|HTMLMapElement|HTMLLinkElement|HTMLLegendElement|HTMLLabelElement|HTMLLIElement|HTMLKeygenElement|HTMLInputElement|HTMLImageElement|HTMLIFrameElement|HTMLHtmlElement|HTMLHeadingElement|HTMLHeadElement|HTMLHRElement|HTMLFrameSetElement|HTMLFrameElement|HTMLFormElement|HTMLFontElement|HTMLFieldSetElement|HTMLEmbedElement|HTMLDivElement|HTMLDirectoryElement|HTMLDetailsElement|HTMLDataListElement|HTMLDListElement|HTMLContentElement|HTMLCanvasElement|HTMLButtonElement|HTMLBodyElement|HTMLBaseFontElement|HTMLBaseElement|HTMLBRElement|HTMLAreaElement|HTMLAppletElement|HTMLAnchorElement|HTMLElement|HTMLUnknownElement|HTMLUListElement|HTMLTrackElement|HTMLTitleElement|HTMLTextAreaElement|HTMLTableSectionElement|HTMLTableRowElement|HTMLTableElement|HTMLTableColElement|HTMLTableCellElement|HTMLTableCaptionElement|HTMLStyleElement|HTMLSpanElement|HTMLSourceElement|HTMLShadowElement|HTMLSelectElement|HTMLScriptElement|HTMLQuoteElement|HTMLProgressElement|HTMLPreElement|HTMLParamElement|HTMLParagraphElement|HTMLOutputElement|HTMLOptionElement|HTMLOptGroupElement|HTMLObjectElement|HTMLOListElement|HTMLModElement|HTMLMeterElement|HTMLMetaElement|HTMLMenuElement|HTMLMarqueeElement|HTMLMapElement|HTMLLinkElement|HTMLLegendElement|HTMLLabelElement|HTMLLIElement|HTMLKeygenElement|HTMLInputElement|HTMLImageElement|HTMLIFrameElement|HTMLHtmlElement|HTMLHeadingElement|HTMLHeadElement|HTMLHRElement|HTMLFrameSetElement|HTMLFrameElement|HTMLFormElement|HTMLFontElement|HTMLFieldSetElement|HTMLEmbedElement|HTMLDivElement|HTMLDirectoryElement|HTMLDetailsElement|HTMLDataListElement|HTMLDListElement|HTMLContentElement|HTMLCanvasElement|HTMLButtonElement|HTMLBodyElement|HTMLBaseFontElement|HTMLBaseElement|HTMLBRElement|HTMLAreaElement|HTMLAppletElement|HTMLAnchorElement|HTMLElement'].join('|');
-  var v4/*class(_DocumentImpl)*/ = 'HTMLDocument|SVGDocument|SVGDocument';
-  var v5/*class(_DocumentFragmentImpl)*/ = 'DocumentFragment|ShadowRoot|ShadowRoot';
-  var v6/*class(_CharacterDataImpl)*/ = 'CharacterData|Text|CDATASection|CDATASection|Comment|Text|CDATASection|CDATASection|Comment';
-  var v7/*class(_WorkerContextImpl)*/ = 'WorkerContext|SharedWorkerContext|DedicatedWorkerContext|SharedWorkerContext|DedicatedWorkerContext';
-  var v8/*class(_NodeImpl)*/ = [v3/*class(_ElementImpl)*/,v4/*class(_DocumentImpl)*/,v5/*class(_DocumentFragmentImpl)*/,v6/*class(_CharacterDataImpl)*/,v3/*class(_ElementImpl)*/,v4/*class(_DocumentImpl)*/,v5/*class(_DocumentFragmentImpl)*/,v6/*class(_CharacterDataImpl)*/,'Node|ProcessingInstruction|Notation|EntityReference|Entity|DocumentType|Attr|ProcessingInstruction|Notation|EntityReference|Entity|DocumentType|Attr'].join('|');
-  var v9/*class(_MediaStreamImpl)*/ = 'MediaStream|LocalMediaStream|LocalMediaStream';
-  var v10/*class(_IDBRequestImpl)*/ = 'IDBRequest|IDBVersionChangeRequest|IDBOpenDBRequest|IDBVersionChangeRequest|IDBOpenDBRequest';
-  var v11/*class(_AbstractWorkerImpl)*/ = 'AbstractWorker|Worker|SharedWorker|Worker|SharedWorker';
+  var v0/*class(_SVGComponentTransferFunctionElementImpl)*/ = 'SVGComponentTransferFunctionElement|SVGFEFuncRElement|SVGFEFuncGElement|SVGFEFuncBElement|SVGFEFuncAElement|SVGFEFuncRElement|SVGFEFuncGElement|SVGFEFuncBElement|SVGFEFuncAElement';
+  var v1/*class(_SVGElementImpl)*/ = [v0/*class(_SVGComponentTransferFunctionElementImpl)*/,v0/*class(_SVGComponentTransferFunctionElementImpl)*/,'SVGElement|SVGViewElement|SVGVKernElement|SVGUseElement|SVGTitleElement|SVGTextContentElement|SVGTextPositioningElement|SVGTextElement|SVGTSpanElement|SVGTRefElement|SVGAltGlyphElement|SVGTextElement|SVGTSpanElement|SVGTRefElement|SVGAltGlyphElement|SVGTextPathElement|SVGTextPositioningElement|SVGTextElement|SVGTSpanElement|SVGTRefElement|SVGAltGlyphElement|SVGTextElement|SVGTSpanElement|SVGTRefElement|SVGAltGlyphElement|SVGTextPathElement|SVGSymbolElement|SVGSwitchElement|SVGStyleElement|SVGStopElement|SVGScriptElement|SVGSVGElement|SVGRectElement|SVGPolylineElement|SVGPolygonElement|SVGPatternElement|SVGPathElement|SVGMissingGlyphElement|SVGMetadataElement|SVGMaskElement|SVGMarkerElement|SVGMPathElement|SVGLineElement|SVGImageElement|SVGHKernElement|SVGGradientElement|SVGRadialGradientElement|SVGLinearGradientElement|SVGRadialGradientElement|SVGLinearGradientElement|SVGGlyphRefElement|SVGGlyphElement|SVGGElement|SVGForeignObjectElement|SVGFontFaceUriElement|SVGFontFaceSrcElement|SVGFontFaceNameElement|SVGFontFaceFormatElement|SVGFontFaceElement|SVGFontElement|SVGFilterElement|SVGFETurbulenceElement|SVGFETileElement|SVGFESpotLightElement|SVGFESpecularLightingElement|SVGFEPointLightElement|SVGFEOffsetElement|SVGFEMorphologyElement|SVGFEMergeNodeElement|SVGFEMergeElement|SVGFEImageElement|SVGFEGaussianBlurElement|SVGFEFloodElement|SVGFEDropShadowElement|SVGFEDistantLightElement|SVGFEDisplacementMapElement|SVGFEDiffuseLightingElement|SVGFEConvolveMatrixElement|SVGFECompositeElement|SVGFEComponentTransferElement|SVGFEColorMatrixElement|SVGFEBlendElement|SVGEllipseElement|SVGDescElement|SVGDefsElement|SVGCursorElement|SVGClipPathElement|SVGCircleElement|SVGAnimationElement|SVGSetElement|SVGAnimateTransformElement|SVGAnimateMotionElement|SVGAnimateElement|SVGAnimateColorElement|SVGSetElement|SVGAnimateTransformElement|SVGAnimateMotionElement|SVGAnimateElement|SVGAnimateColorElement|SVGAltGlyphItemElement|SVGAltGlyphDefElement|SVGAElement|SVGViewElement|SVGVKernElement|SVGUseElement|SVGTitleElement|SVGTextContentElement|SVGTextPositioningElement|SVGTextElement|SVGTSpanElement|SVGTRefElement|SVGAltGlyphElement|SVGTextElement|SVGTSpanElement|SVGTRefElement|SVGAltGlyphElement|SVGTextPathElement|SVGTextPositioningElement|SVGTextElement|SVGTSpanElement|SVGTRefElement|SVGAltGlyphElement|SVGTextElement|SVGTSpanElement|SVGTRefElement|SVGAltGlyphElement|SVGTextPathElement|SVGSymbolElement|SVGSwitchElement|SVGStyleElement|SVGStopElement|SVGScriptElement|SVGSVGElement|SVGRectElement|SVGPolylineElement|SVGPolygonElement|SVGPatternElement|SVGPathElement|SVGMissingGlyphElement|SVGMetadataElement|SVGMaskElement|SVGMarkerElement|SVGMPathElement|SVGLineElement|SVGImageElement|SVGHKernElement|SVGGradientElement|SVGRadialGradientElement|SVGLinearGradientElement|SVGRadialGradientElement|SVGLinearGradientElement|SVGGlyphRefElement|SVGGlyphElement|SVGGElement|SVGForeignObjectElement|SVGFontFaceUriElement|SVGFontFaceSrcElement|SVGFontFaceNameElement|SVGFontFaceFormatElement|SVGFontFaceElement|SVGFontElement|SVGFilterElement|SVGFETurbulenceElement|SVGFETileElement|SVGFESpotLightElement|SVGFESpecularLightingElement|SVGFEPointLightElement|SVGFEOffsetElement|SVGFEMorphologyElement|SVGFEMergeNodeElement|SVGFEMergeElement|SVGFEImageElement|SVGFEGaussianBlurElement|SVGFEFloodElement|SVGFEDropShadowElement|SVGFEDistantLightElement|SVGFEDisplacementMapElement|SVGFEDiffuseLightingElement|SVGFEConvolveMatrixElement|SVGFECompositeElement|SVGFEComponentTransferElement|SVGFEColorMatrixElement|SVGFEBlendElement|SVGEllipseElement|SVGDescElement|SVGDefsElement|SVGCursorElement|SVGClipPathElement|SVGCircleElement|SVGAnimationElement|SVGSetElement|SVGAnimateTransformElement|SVGAnimateMotionElement|SVGAnimateElement|SVGAnimateColorElement|SVGSetElement|SVGAnimateTransformElement|SVGAnimateMotionElement|SVGAnimateElement|SVGAnimateColorElement|SVGAltGlyphItemElement|SVGAltGlyphDefElement|SVGAElement'].join('|');
+  var v2/*class(_MediaElementImpl)*/ = 'HTMLMediaElement|HTMLVideoElement|HTMLAudioElement|HTMLVideoElement|HTMLAudioElement';
+  var v3/*class(_Uint8ArrayImpl)*/ = 'Uint8Array|Uint8ClampedArray|Uint8ClampedArray';
+  var v4/*class(_ElementImpl)*/ = [v1/*class(_SVGElementImpl)*/,v2/*class(_MediaElementImpl)*/,v1/*class(_SVGElementImpl)*/,v2/*class(_MediaElementImpl)*/,'Element|HTMLUnknownElement|HTMLUListElement|HTMLTrackElement|HTMLTitleElement|HTMLTextAreaElement|HTMLTableSectionElement|HTMLTableRowElement|HTMLTableElement|HTMLTableColElement|HTMLTableCellElement|HTMLTableCaptionElement|HTMLStyleElement|HTMLSpanElement|HTMLSourceElement|HTMLShadowElement|HTMLSelectElement|HTMLScriptElement|HTMLQuoteElement|HTMLProgressElement|HTMLPreElement|HTMLParamElement|HTMLParagraphElement|HTMLOutputElement|HTMLOptionElement|HTMLOptGroupElement|HTMLObjectElement|HTMLOListElement|HTMLModElement|HTMLMeterElement|HTMLMetaElement|HTMLMenuElement|HTMLMarqueeElement|HTMLMapElement|HTMLLinkElement|HTMLLegendElement|HTMLLabelElement|HTMLLIElement|HTMLKeygenElement|HTMLInputElement|HTMLImageElement|HTMLIFrameElement|HTMLHtmlElement|HTMLHeadingElement|HTMLHeadElement|HTMLHRElement|HTMLFrameSetElement|HTMLFrameElement|HTMLFormElement|HTMLFontElement|HTMLFieldSetElement|HTMLEmbedElement|HTMLDivElement|HTMLDirectoryElement|HTMLDetailsElement|HTMLDataListElement|HTMLDListElement|HTMLContentElement|HTMLCanvasElement|HTMLButtonElement|HTMLBodyElement|HTMLBaseFontElement|HTMLBaseElement|HTMLBRElement|HTMLAreaElement|HTMLAppletElement|HTMLAnchorElement|HTMLElement|HTMLUnknownElement|HTMLUListElement|HTMLTrackElement|HTMLTitleElement|HTMLTextAreaElement|HTMLTableSectionElement|HTMLTableRowElement|HTMLTableElement|HTMLTableColElement|HTMLTableCellElement|HTMLTableCaptionElement|HTMLStyleElement|HTMLSpanElement|HTMLSourceElement|HTMLShadowElement|HTMLSelectElement|HTMLScriptElement|HTMLQuoteElement|HTMLProgressElement|HTMLPreElement|HTMLParamElement|HTMLParagraphElement|HTMLOutputElement|HTMLOptionElement|HTMLOptGroupElement|HTMLObjectElement|HTMLOListElement|HTMLModElement|HTMLMeterElement|HTMLMetaElement|HTMLMenuElement|HTMLMarqueeElement|HTMLMapElement|HTMLLinkElement|HTMLLegendElement|HTMLLabelElement|HTMLLIElement|HTMLKeygenElement|HTMLInputElement|HTMLImageElement|HTMLIFrameElement|HTMLHtmlElement|HTMLHeadingElement|HTMLHeadElement|HTMLHRElement|HTMLFrameSetElement|HTMLFrameElement|HTMLFormElement|HTMLFontElement|HTMLFieldSetElement|HTMLEmbedElement|HTMLDivElement|HTMLDirectoryElement|HTMLDetailsElement|HTMLDataListElement|HTMLDListElement|HTMLContentElement|HTMLCanvasElement|HTMLButtonElement|HTMLBodyElement|HTMLBaseFontElement|HTMLBaseElement|HTMLBRElement|HTMLAreaElement|HTMLAppletElement|HTMLAnchorElement|HTMLElement'].join('|');
+  var v5/*class(_DocumentImpl)*/ = 'HTMLDocument|SVGDocument|SVGDocument';
+  var v6/*class(_DocumentFragmentImpl)*/ = 'DocumentFragment|ShadowRoot|ShadowRoot';
+  var v7/*class(_CharacterDataImpl)*/ = 'CharacterData|Text|CDATASection|CDATASection|Comment|Text|CDATASection|CDATASection|Comment';
+  var v8/*class(_WorkerContextImpl)*/ = 'WorkerContext|SharedWorkerContext|DedicatedWorkerContext|SharedWorkerContext|DedicatedWorkerContext';
+  var v9/*class(_NodeImpl)*/ = [v4/*class(_ElementImpl)*/,v5/*class(_DocumentImpl)*/,v6/*class(_DocumentFragmentImpl)*/,v7/*class(_CharacterDataImpl)*/,v4/*class(_ElementImpl)*/,v5/*class(_DocumentImpl)*/,v6/*class(_DocumentFragmentImpl)*/,v7/*class(_CharacterDataImpl)*/,'Node|ProcessingInstruction|Notation|EntityReference|Entity|DocumentType|Attr|ProcessingInstruction|Notation|EntityReference|Entity|DocumentType|Attr'].join('|');
+  var v10/*class(_MediaStreamImpl)*/ = 'MediaStream|LocalMediaStream|LocalMediaStream';
+  var v11/*class(_IDBRequestImpl)*/ = 'IDBRequest|IDBVersionChangeRequest|IDBOpenDBRequest|IDBVersionChangeRequest|IDBOpenDBRequest';
+  var v12/*class(_AbstractWorkerImpl)*/ = 'AbstractWorker|Worker|SharedWorker|Worker|SharedWorker';
   var table = [
     // [dynamic-dispatch-tag, tags of classes implementing dynamic-dispatch-tag]
-    ['IDBRequest', v10/*class(_IDBRequestImpl)*/],
+    ['IDBRequest', v11/*class(_IDBRequestImpl)*/],
     ['DOMTokenList', 'DOMTokenList|DOMSettableTokenList|DOMSettableTokenList'],
-    ['SVGElement', v0/*class(_SVGElementImpl)*/],
-    ['HTMLMediaElement', v1/*class(_MediaElementImpl)*/],
-    ['MediaStream', v9/*class(_MediaStreamImpl)*/],
-    ['DocumentFragment', v5/*class(_DocumentFragmentImpl)*/],
-    ['HTMLDocument', v4/*class(_DocumentImpl)*/],
+    ['SVGComponentTransferFunctionElement', v0/*class(_SVGComponentTransferFunctionElementImpl)*/],
+    ['SVGElement', v1/*class(_SVGElementImpl)*/],
+    ['HTMLMediaElement', v2/*class(_MediaElementImpl)*/],
+    ['MediaStream', v10/*class(_MediaStreamImpl)*/],
+    ['DocumentFragment', v6/*class(_DocumentFragmentImpl)*/],
+    ['HTMLDocument', v5/*class(_DocumentImpl)*/],
     ['StyleSheet', 'StyleSheet|CSSStyleSheet|CSSStyleSheet'],
-    ['AbstractWorker', v11/*class(_AbstractWorkerImpl)*/],
-    ['Element', v3/*class(_ElementImpl)*/],
-    ['Uint8Array', v2/*class(_Uint8ArrayImpl)*/],
-    ['ArrayBufferView', [v2/*class(_Uint8ArrayImpl)*/,v2/*class(_Uint8ArrayImpl)*/,'ArrayBufferView|Uint32Array|Uint16Array|Int8Array|Int32Array|Int16Array|Float64Array|Float32Array|DataView|Uint32Array|Uint16Array|Int8Array|Int32Array|Int16Array|Float64Array|Float32Array|DataView'].join('|')],
+    ['Element', v4/*class(_ElementImpl)*/],
+    ['AbstractWorker', v12/*class(_AbstractWorkerImpl)*/],
+    ['Uint8Array', v3/*class(_Uint8ArrayImpl)*/],
+    ['ArrayBufferView', [v3/*class(_Uint8ArrayImpl)*/,v3/*class(_Uint8ArrayImpl)*/,'ArrayBufferView|Uint32Array|Uint16Array|Int8Array|Int32Array|Int16Array|Float64Array|Float32Array|DataView|Uint32Array|Uint16Array|Int8Array|Int32Array|Int16Array|Float64Array|Float32Array|DataView'].join('|')],
     ['EntrySync', 'EntrySync|FileEntrySync|DirectoryEntrySync|FileEntrySync|DirectoryEntrySync'],
     ['Entry', 'Entry|FileEntry|DirectoryEntry|FileEntry|DirectoryEntry'],
-    ['CharacterData', v6/*class(_CharacterDataImpl)*/],
-    ['Node', v8/*class(_NodeImpl)*/],
+    ['Event', 'Event|WebGLContextEvent|UIEvent|TouchEvent|TextEvent|SVGZoomEvent|MouseEvent|WheelEvent|WheelEvent|KeyboardEvent|CompositionEvent|TouchEvent|TextEvent|SVGZoomEvent|MouseEvent|WheelEvent|WheelEvent|KeyboardEvent|CompositionEvent|WebKitTransitionEvent|TrackEvent|StorageEvent|SpeechRecognitionEvent|SpeechRecognitionError|SpeechInputEvent|RTCIceCandidateEvent|ProgressEvent|XMLHttpRequestProgressEvent|XMLHttpRequestProgressEvent|PopStateEvent|PageTransitionEvent|OverflowEvent|OfflineAudioCompletionEvent|MutationEvent|MessageEvent|MediaStreamTrackEvent|MediaStreamEvent|MediaKeyEvent|IDBVersionChangeEvent|IDBUpgradeNeededEvent|HashChangeEvent|ErrorEvent|DeviceOrientationEvent|DeviceMotionEvent|CustomEvent|CloseEvent|BeforeLoadEvent|AudioProcessingEvent|WebKitAnimationEvent|WebGLContextEvent|UIEvent|TouchEvent|TextEvent|SVGZoomEvent|MouseEvent|WheelEvent|WheelEvent|KeyboardEvent|CompositionEvent|TouchEvent|TextEvent|SVGZoomEvent|MouseEvent|WheelEvent|WheelEvent|KeyboardEvent|CompositionEvent|WebKitTransitionEvent|TrackEvent|StorageEvent|SpeechRecognitionEvent|SpeechRecognitionError|SpeechInputEvent|RTCIceCandidateEvent|ProgressEvent|XMLHttpRequestProgressEvent|XMLHttpRequestProgressEvent|PopStateEvent|PageTransitionEvent|OverflowEvent|OfflineAudioCompletionEvent|MutationEvent|MessageEvent|MediaStreamTrackEvent|MediaStreamEvent|MediaKeyEvent|IDBVersionChangeEvent|IDBUpgradeNeededEvent|HashChangeEvent|ErrorEvent|DeviceOrientationEvent|DeviceMotionEvent|CustomEvent|CloseEvent|BeforeLoadEvent|AudioProcessingEvent|WebKitAnimationEvent'],
     ['NodeList', 'NodeList|RadioNodeList|RadioNodeList'],
-    ['WorkerContext', v7/*class(_WorkerContextImpl)*/],
-    ['EventTarget', [v7/*class(_WorkerContextImpl)*/,v8/*class(_NodeImpl)*/,v9/*class(_MediaStreamImpl)*/,v10/*class(_IDBRequestImpl)*/,v11/*class(_AbstractWorkerImpl)*/,v7/*class(_WorkerContextImpl)*/,v8/*class(_NodeImpl)*/,v9/*class(_MediaStreamImpl)*/,v10/*class(_IDBRequestImpl)*/,v11/*class(_AbstractWorkerImpl)*/,'EventTarget|DOMWindow|WebSocket|WebKitNamedFlow|TextTrack|TextTrackCue|SpeechRecognition|SVGElementInstance|RTCPeerConnection|Performance|PeerConnection00|Notification|MessagePort|MediaStreamTrackList|MediaStreamTrack|MediaSource|MediaController|IDBTransaction|IDBDatabase|XMLHttpRequestUpload|XMLHttpRequest|FileWriter|FileReader|EventSource|DOMApplicationCache|BatteryManager|AudioContext|DOMWindow|WebSocket|WebKitNamedFlow|TextTrack|TextTrackCue|SpeechRecognition|SVGElementInstance|RTCPeerConnection|Performance|PeerConnection00|Notification|MessagePort|MediaStreamTrackList|MediaStreamTrack|MediaSource|MediaController|IDBTransaction|IDBDatabase|XMLHttpRequestUpload|XMLHttpRequest|FileWriter|FileReader|EventSource|DOMApplicationCache|BatteryManager|AudioContext'].join('|')],
+    ['WorkerContext', v8/*class(_WorkerContextImpl)*/],
+    ['CharacterData', v7/*class(_CharacterDataImpl)*/],
+    ['Node', v9/*class(_NodeImpl)*/],
+    ['EventTarget', [v8/*class(_WorkerContextImpl)*/,v9/*class(_NodeImpl)*/,v10/*class(_MediaStreamImpl)*/,v11/*class(_IDBRequestImpl)*/,v12/*class(_AbstractWorkerImpl)*/,v8/*class(_WorkerContextImpl)*/,v9/*class(_NodeImpl)*/,v10/*class(_MediaStreamImpl)*/,v11/*class(_IDBRequestImpl)*/,v12/*class(_AbstractWorkerImpl)*/,'EventTarget|DOMWindow|WebSocket|WebKitNamedFlow|TextTrack|TextTrackCue|SpeechRecognition|SVGElementInstance|RTCPeerConnection|Performance|PeerConnection00|Notification|MessagePort|MediaStreamTrackList|MediaStreamTrack|MediaSource|MediaController|IDBTransaction|IDBDatabase|XMLHttpRequestUpload|XMLHttpRequest|FileWriter|FileReader|EventSource|DOMApplicationCache|BatteryManager|AudioContext|DOMWindow|WebSocket|WebKitNamedFlow|TextTrack|TextTrackCue|SpeechRecognition|SVGElementInstance|RTCPeerConnection|Performance|PeerConnection00|Notification|MessagePort|MediaStreamTrackList|MediaStreamTrack|MediaSource|MediaController|IDBTransaction|IDBDatabase|XMLHttpRequestUpload|XMLHttpRequest|FileWriter|FileReader|EventSource|DOMApplicationCache|BatteryManager|AudioContext'].join('|')],
     ['AudioParam', 'AudioParam|AudioGain|AudioGain'],
     ['Blob', 'Blob|File|File'],
     ['HTMLCollection', 'HTMLCollection|HTMLOptionsCollection|HTMLOptionsCollection'],
+    ['CSSRule', 'CSSRule|CSSUnknownRule|CSSStyleRule|CSSPageRule|CSSMediaRule|WebKitCSSKeyframesRule|WebKitCSSKeyframeRule|CSSImportRule|CSSFontFaceRule|CSSCharsetRule|CSSUnknownRule|CSSStyleRule|CSSPageRule|CSSMediaRule|WebKitCSSKeyframesRule|WebKitCSSKeyframeRule|CSSImportRule|CSSFontFaceRule|CSSCharsetRule'],
     ['CSSValueList', 'CSSValueList|WebKitCSSFilterValue|WebKitCSSTransformValue|WebKitCSSFilterValue|WebKitCSSTransformValue'],
     ['IDBCursor', 'IDBCursor|IDBCursorWithValue|IDBCursorWithValue']];
 $.dynamicSetMetadata(table);

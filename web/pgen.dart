@@ -2,104 +2,99 @@
 #import('dart:html');
 #import('dart:math');
 
-void main() {
-  InputElement lowerCase = query('#lowerCase');
-  InputElement upperCase = query('#upperCase');
-  InputElement numbers = query('#numbers');
-  InputElement special = query('#special');
-  InputElement generate = query('#generate');
+class PasswordGenerator {
+  const int _length = 10;
 
-  // Read previous checkbox values from local storage.
-  readElementValue(lowerCase);
-  readElementValue(upperCase);
-  readElementValue(numbers);
-  readElementValue(special);
-  generate.disabled = !canGenerate();
+  final InputElement _lower = query('#lower');
+  final InputElement _upper = query('#upper');
+  final InputElement _numbers = query('#numbers');
+  final InputElement _special = query('#special');
+  final InputElement _generate = query('#generate');
+  final OutputElement _password = query('#password');
 
-  // Add checkbox event handlers which stores the last checkbox
-  // state into the local storage.
-  addElementHandler(lowerCase);
-  addElementHandler(upperCase);
-  addElementHandler(numbers);
-  addElementHandler(special);
-  addElementHandler(generate);
+  void initialize() {
+    // Read previous checkbox values from local storage.
+    _readElementValue(_lower);
+    _readElementValue(_upper);
+    _readElementValue(_numbers);
+    _readElementValue(_special);
+    _generate.disabled = !_canGenerate();
 
-  // Automatically generate first password
-  if (!generate.disabled) {
-    generatePassword();
-  }
-}
+    // Add checkbox event handlers which stores the last checkbox
+    // state into the local storage.
+    _addElementHandler(_lower);
+    _addElementHandler(_upper);
+    _addElementHandler(_numbers);
+    _addElementHandler(_special);
+    _addElementHandler(_generate);
 
-void generatePassword() {
-  List<int> charCodes = createCharPool();
-
-  // Create password from character pool.
-  Random random = new Random();
-  StringBuffer result = new StringBuffer();
-  for (int i = 0; i < 10; i++) {
-    int charCode = charCodes[random.nextInt(charCodes.length)];
-    result.addCharCode(charCode);
+    // Automatically generate first password
+    if (!_generate.disabled) {
+      _generatePassword();
+    }
   }
 
-  // Show resulting password.
-  OutputElement password = query('#password');
-  password.value = result.toString();
-}
-
-List<int> createCharPool() {
-  InputElement lowerCase = query('#lowerCase');
-  InputElement upperCase = query('#upperCase');
-  InputElement numbers = query('#numbers');
-  InputElement special = query('#special');
-  InputElement generate = query('#generate');
-
-  StringBuffer charPool = new StringBuffer();
-  if (lowerCase.checked) {
-    charPool.add("abcdefghijklmnopqrstuvwxyz");
+  bool _canGenerate() {
+    return (_lower.checked || _upper.checked ||
+        _numbers.checked || _special.checked);
   }
-  if (upperCase.checked) {
-    charPool.add("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-  }
-  if (numbers.checked) {
-    charPool.add("0123456789");
-  }
-  if (special.checked) {
-    charPool.add("!#\$%&()*+,-./:;<=>?@[]^_{}");
-  }
-  return charPool.toString().charCodes();
-}
 
-bool canGenerate() {
-  InputElement lowerCase = query('#lowerCase');
-  InputElement upperCase = query('#upperCase');
-  InputElement numbers = query('#numbers');
-  InputElement special = query('#special');
+  List<int> _createCharPool() {
+    StringBuffer charPool = new StringBuffer();
+    if (_lower.checked) {
+      charPool.add("abcdefghijklmnopqrstuvwxyz");
+    }
+    if (_upper.checked) {
+      charPool.add("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    }
+    if (_numbers.checked) {
+      charPool.add("0123456789");
+    }
+    if (_special.checked) {
+      charPool.add("!#\$%&()*+,-./:;<=>?@[]^_{}");
+    }
+    return charPool.toString().charCodes();
+  }
 
-  return (lowerCase.checked || upperCase.checked ||
-      numbers.checked || special.checked);
-}
+  void _generatePassword() {
+    List<int> charCodes = _createCharPool();
+    Random random = new Random();
+    StringBuffer result = new StringBuffer();
+    for (int i = 0; i < _length; i++) {
+      int charCode = charCodes[random.nextInt(charCodes.length)];
+      result.addCharCode(charCode);
+    }
+    _password.value = result.toString();
+  }
 
-void readElementValue(InputElement elem) {
-  String saved = window.localStorage[elem.id];
-  if (saved != null) {
+  void _readElementValue(InputElement elem) {
+    String saved = window.localStorage[elem.id];
+    if (saved != null) {
+      if (elem.type == 'checkbox') {
+        elem.checked = (saved == "true") ? true : false;
+      }
+    }
+  }
+
+  void _addElementHandler(InputElement elem) {
     if (elem.type == 'checkbox') {
-      elem.checked = (saved == "true") ? true : false;
+      elem.on.click.add((Event e) {
+        window.localStorage[elem.id] = elem.checked.toString();
+        _generate.disabled = !_canGenerate();
+      });
+    } else if (elem.type == 'submit') {
+      if (elem.id == 'generate') {
+        elem.on.click.add((Event e) {
+          _generatePassword();
+        });
+      }
     }
   }
 }
 
-void addElementHandler(InputElement elem) {
-  if (elem.type == 'checkbox') {
-    elem.on.click.add((Event e) {
-      window.localStorage[elem.id] = elem.checked.toString();
-      InputElement generate = query('#generate');
-      generate.disabled = !canGenerate();
-    });
-  } else if (elem.type == 'submit') {
-    if (elem.id == 'generate') {
-      elem.on.click.add((Event e) {
-        generatePassword();
-      });
-    }
+void main() {
+  PasswordGenerator generator = new PasswordGenerator();
+  if (generator != null) {
+    generator.initialize();
   }
 }

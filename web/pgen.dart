@@ -18,7 +18,7 @@ class PasswordGenerator {
     _readElementValue(_upper);
     _readElementValue(_numbers);
     _readElementValue(_special);
-    _generate.disabled = !_canGenerate();
+    _generate.disabled = !_canGenerate;
 
     // Add checkbox event handlers which stores the last checkbox
     // state into the local storage.
@@ -34,10 +34,8 @@ class PasswordGenerator {
     }
   }
 
-  bool _canGenerate() {
-    return (_lower.checked || _upper.checked ||
-        _numbers.checked || _special.checked);
-  }
+  bool get _canGenerate => (_lower.checked || _upper.checked ||
+      _numbers.checked || _special.checked);
 
   List<int> _createCharPool() {
     StringBuffer charPool = new StringBuffer();
@@ -80,7 +78,7 @@ class PasswordGenerator {
     if (elem.type == 'checkbox') {
       elem.on.click.add((Event e) {
         window.localStorage[elem.id] = elem.checked.toString();
-        _generate.disabled = !_canGenerate();
+        _generate.disabled = !_canGenerate;
       });
     } else if (elem.type == 'submit') {
       if (elem.id == 'generate') {

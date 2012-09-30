@@ -10,36 +10,49 @@ void main() {
   InputElement generate = query('#generate');
 
   // Read previous checkbox values from local storage.
-  readCheckboxValue(lowerCase);
-  readCheckboxValue(upperCase);
-  readCheckboxValue(numbers);
-  readCheckboxValue(special);
+  readElementValue(lowerCase);
+  readElementValue(upperCase);
+  readElementValue(numbers);
+  readElementValue(special);
   generate.disabled = !canGenerate();
 
   // Add checkbox event handlers which stores the last checkbox
   // state into the local storage.
-  addCheckboxHandler(lowerCase);
-  addCheckboxHandler(upperCase);
-  addCheckboxHandler(numbers);
-  addCheckboxHandler(special);
+  addElementHandler(lowerCase);
+  addElementHandler(upperCase);
+  addElementHandler(numbers);
+  addElementHandler(special);
+  addElementHandler(generate);
 
-  generate.on.click.add((Event e) {
-    generatePassword();
-  });
+  // Automatically generate first password
   if (!generate.disabled) {
     generatePassword();
   }
 }
 
 void generatePassword() {
+  List<int> charCodes = createCharPool();
+
+  // Create password from character pool.
+  Random random = new Random();
+  StringBuffer result = new StringBuffer();
+  for (int i = 0; i < 10; i++) {
+    int charCode = charCodes[random.nextInt(charCodes.length)];
+    result.addCharCode(charCode);
+  }
+
+  // Show resulting password.
+  OutputElement password = query('#password');
+  password.value = result.toString();
+}
+
+List<int> createCharPool() {
   InputElement lowerCase = query('#lowerCase');
   InputElement upperCase = query('#upperCase');
   InputElement numbers = query('#numbers');
   InputElement special = query('#special');
   InputElement generate = query('#generate');
-  OutputElement password = query('#password');
 
-  // Prepare character pool.
   StringBuffer charPool = new StringBuffer();
   if (lowerCase.checked) {
     charPool.add("abcdefghijklmnopqrstuvwxyz");
@@ -51,17 +64,9 @@ void generatePassword() {
     charPool.add("0123456789");
   }
   if (special.checked) {
-    charPool.add("!\"#\$%&'()*+,-'./:;<=>?@[\\]^_{|}~");
+    charPool.add("!#\$%&()*+,-./:;<=>?@[]^_{}");
   }
-  List<int> charCodes = charPool.toString().charCodes();
-
-  // Create passwort from character pool.
-  Random random = new Random();
-  StringBuffer result = new StringBuffer();
-  for (int i = 0; i < 10; i++) {
-    result.addCharCode(charCodes[random.nextInt(charPool.length)]);
-  }
-  password.value = result.toString();
+  return charPool.toString().charCodes();
 }
 
 bool canGenerate() {
@@ -69,21 +74,32 @@ bool canGenerate() {
   InputElement upperCase = query('#upperCase');
   InputElement numbers = query('#numbers');
   InputElement special = query('#special');
+
   return (lowerCase.checked || upperCase.checked ||
       numbers.checked || special.checked);
 }
 
-void readCheckboxValue(InputElement checkbox) {
-  String saved = window.localStorage[checkbox.id];
+void readElementValue(InputElement elem) {
+  String saved = window.localStorage[elem.id];
   if (saved != null) {
-    checkbox.checked = (saved == "true") ? true : false;
+    if (elem.type == 'checkbox') {
+      elem.checked = (saved == "true") ? true : false;
+    }
   }
 }
 
-void addCheckboxHandler(InputElement checkbox) {
-  checkbox.on.click.add((Event e) {
-    window.localStorage[checkbox.id] = checkbox.checked.toString();
-    InputElement generate = query('#generate');
-    generate.disabled = !canGenerate();
-  });
+void addElementHandler(InputElement elem) {
+  if (elem.type == 'checkbox') {
+    elem.on.click.add((Event e) {
+      window.localStorage[elem.id] = elem.checked.toString();
+      InputElement generate = query('#generate');
+      generate.disabled = !canGenerate();
+    });
+  } else if (elem.type == 'submit') {
+    if (elem.id == 'generate') {
+      elem.on.click.add((Event e) {
+        generatePassword();
+      });
+    }
+  }
 }

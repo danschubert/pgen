@@ -20,8 +20,26 @@ p {
   background-color: #fff;
 }
 
-#text {
-  font-size: 24pt;
-  text-align: center;
-  margin-top: 140px;
+#controls {
+  margin: 20px;
+}
+
+#upperCase {
+  margin-top: 10px;
+}
+
+#numbers {
+  margin-top: 10px;
+}
+
+#special {
+  margin-top: 10px;
+}
+
+#generate {
+  margin-top: 20px;
+}
+
+#password {
+  margin-left: 10px;
 }

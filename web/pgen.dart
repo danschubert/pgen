@@ -1,19 +1,75 @@
 
 #import('dart:html');
-
-num rotatePos = 0;
+#import('dart:math');
 
 void main() {
-  query("#text").text = "Click me!";
+  InputElement lowerCase = query('#lowerCase');
+  InputElement upperCase = query('#upperCase');
+  InputElement numbers = query('#numbers');
+  InputElement special = query('#special');
+  InputElement generate = query('#generate');
 
-  query("#text").on.click.add(rotateText);
+  // Read previous checkbox values from local storage.
+  readCheckboxValue(lowerCase);
+  readCheckboxValue(upperCase);
+  readCheckboxValue(numbers);
+  readCheckboxValue(special);
+
+  // Add checkbox event handlers which stores the last checkbox
+  // state into the local storage.
+  addCheckboxHandler(lowerCase);
+  addCheckboxHandler(upperCase);
+  addCheckboxHandler(numbers);
+  addCheckboxHandler(special);
+
+  generate.on.click.add((Event e) {
+    generatePassword();
+  });
+  generatePassword();
 }
 
-void rotateText(Event event) {
-  rotatePos += 360;
+void generatePassword() {
+  InputElement lowerCase = query('#lowerCase');
+  InputElement upperCase = query('#upperCase');
+  InputElement numbers = query('#numbers');
+  InputElement special = query('#special');
+  InputElement generate = query('#generate');
+  OutputElement password = query('#password');
 
-  var textElement = query("#text");
+  // Prepare character pool.
+  StringBuffer charPool = new StringBuffer();
+  if (lowerCase.checked) {
+    charPool.add("abcdefghijklmnopqrstuvwxyz");
+  }
+  if (upperCase.checked) {
+    charPool.add("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+  }
+  if (numbers.checked) {
+    charPool.add("0123456789");
+  }
+  if (special.checked) {
+    charPool.add("!\"#\$%&'()*+,-'./:;<=>?@[\\]^_{|}~");
+  }
 
-  textElement.style.transition = "1s";
-  textElement.style.transform = "rotate(${rotatePos}deg)";
+  // Create passwort from character pool.
+  Random random = new Random();
+  List<int> charCodes = charPool.toString().charCodes();
+  StringBuffer result = new StringBuffer();
+  for (int i = 0; i < 10; i++) {
+    result.addCharCode(charCodes[random.nextInt(charPool.length)]);
+  }
+  password.value = result.toString();
+}
+
+void readCheckboxValue(InputElement checkbox) {
+  String saved = window.localStorage[checkbox.id];
+  if (saved != null) {
+    checkbox.checked = (saved == "true") ? true : false;
+  }
+}
+
+void addCheckboxHandler(InputElement checkbox) {
+  checkbox.on.click.add((Event e) {
+    window.localStorage[checkbox.id] = checkbox.checked.toString();
+  });
 }

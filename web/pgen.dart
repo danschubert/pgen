@@ -3,7 +3,7 @@
 #import('dart:math');
 
 class PasswordGenerator {
-  const int _length = 10;
+  final int _length = 10;
 
   final InputElement _lower = query('#lower');
   final InputElement _upper = query('#upper');
@@ -38,7 +38,7 @@ class PasswordGenerator {
       _numbers.checked || _special.checked);
 
   List<int> _createCharPool() {
-    StringBuffer charPool = new StringBuffer();
+    var charPool = new StringBuffer();
     if (_lower.checked) {
       charPool.add("abcdefghijklmnopqrstuvwxyz");
     }
@@ -55,9 +55,9 @@ class PasswordGenerator {
   }
 
   void _generatePassword() {
-    List<int> charCodes = _createCharPool();
-    Random random = new Random();
-    StringBuffer result = new StringBuffer();
+    var charCodes = _createCharPool();
+    var random = new Random();
+    var result = new StringBuffer();
     for (int i = 0; i < _length; i++) {
       int charCode = charCodes[random.nextInt(charCodes.length)];
       result.addCharCode(charCode);
@@ -66,7 +66,7 @@ class PasswordGenerator {
   }
 
   void _readElementValue(InputElement elem) {
-    String saved = window.localStorage[elem.id];
+    var saved = window.localStorage[elem.id];
     if (saved != null) {
       if (elem.type == 'checkbox') {
         elem.checked = (saved == "true") ? true : false;
@@ -91,7 +91,7 @@ class PasswordGenerator {
 }
 
 void main() {
-  PasswordGenerator generator = new PasswordGenerator();
+  var generator = new PasswordGenerator();
   if (generator != null) {
     generator.initialize();
   }

@@ -14,6 +14,7 @@ void main() {
   readCheckboxValue(upperCase);
   readCheckboxValue(numbers);
   readCheckboxValue(special);
+  generate.disabled = !canGenerate();
 
   // Add checkbox event handlers which stores the last checkbox
   // state into the local storage.
@@ -25,7 +26,9 @@ void main() {
   generate.on.click.add((Event e) {
     generatePassword();
   });
-  generatePassword();
+  if (!generate.disabled) {
+    generatePassword();
+  }
 }
 
 void generatePassword() {
@@ -61,6 +64,15 @@ void generatePassword() {
   password.value = result.toString();
 }
 
+bool canGenerate() {
+  InputElement lowerCase = query('#lowerCase');
+  InputElement upperCase = query('#upperCase');
+  InputElement numbers = query('#numbers');
+  InputElement special = query('#special');
+  return (lowerCase.checked || upperCase.checked ||
+      numbers.checked || special.checked);
+}
+
 void readCheckboxValue(InputElement checkbox) {
   String saved = window.localStorage[checkbox.id];
   if (saved != null) {
@@ -71,5 +83,7 @@ void readCheckboxValue(InputElement checkbox) {
 void addCheckboxHandler(InputElement checkbox) {
   checkbox.on.click.add((Event e) {
     window.localStorage[checkbox.id] = checkbox.checked.toString();
+    InputElement generate = query('#generate');
+    generate.disabled = !canGenerate();
   });
 }

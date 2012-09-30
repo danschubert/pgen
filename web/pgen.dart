@@ -50,10 +50,10 @@ void generatePassword() {
   if (special.checked) {
     charPool.add("!\"#\$%&'()*+,-'./:;<=>?@[\\]^_{|}~");
   }
+  List<int> charCodes = charPool.toString().charCodes();
 
   // Create passwort from character pool.
   Random random = new Random();
-  List<int> charCodes = charPool.toString().charCodes();
   StringBuffer result = new StringBuffer();
   for (int i = 0; i < 10; i++) {
     result.addCharCode(charCodes[random.nextInt(charPool.length)]);

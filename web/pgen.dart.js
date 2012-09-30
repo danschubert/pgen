@@ -1016,18 +1016,18 @@ $$.MetaInfo = {"":
 };
 
 $$.PasswordGenerator = {"":
- ["_length", "_lowerCase", "_upperCase", "_numbers", "_special", "_generate?", "_password"],
+ ["_length", "_lower", "_upper", "_numbers", "_special", "_generate?", "_password"],
  "super": "Object",
  initialize$0: function() {
-  var t1 = this._lowerCase;
+  var t1 = this._lower;
   this._readElementValue$1(t1);
-  var t2 = this._upperCase;
+  var t2 = this._upper;
   this._readElementValue$1(t2);
   var t3 = this._numbers;
   this._readElementValue$1(t3);
   var t4 = this._special;
   this._readElementValue$1(t4);
-  var t5 = this._canGenerate$0() !== true;
+  var t5 = this.get$_canGenerate() !== true;
   var t6 = this._generate;
   t6.set$disabled(t5);
   this._addElementHandler$1(t1);
@@ -1038,14 +1038,14 @@ $$.PasswordGenerator = {"":
   if (t6.get$disabled() !== true)
     this._generatePassword$0();
 },
- _canGenerate$0: function() {
-  return this._lowerCase.get$checked() === true || this._upperCase.get$checked() === true || this._numbers.get$checked() === true || this._special.get$checked() === true;
+ get$_canGenerate: function() {
+  return this._lower.get$checked() === true || this._upper.get$checked() === true || this._numbers.get$checked() === true || this._special.get$checked() === true;
 },
  _createCharPool$0: function() {
   var charPool = $.StringBuffer_StringBuffer('');
-  if (this._lowerCase.get$checked() === true)
+  if (this._lower.get$checked() === true)
     $.add$1(charPool, 'abcdefghijklmnopqrstuvwxyz');
-  if (this._upperCase.get$checked() === true)
+  if (this._upper.get$checked() === true)
     $.add$1(charPool, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
   if (this._numbers.get$checked() === true)
     $.add$1(charPool, '0123456789');
@@ -2497,7 +2497,7 @@ $$.PasswordGenerator__addElementHandler_anon = {"":
   var t2 = this.elem_0;
   $.indexSet(t1, t2.get$id(), $.toString(t2.get$checked()));
   t1 = this.this_1;
-  var t3 = t1._canGenerate$0() !== true;
+  var t3 = t1.get$_canGenerate() !== true;
   t1.get$_generate().set$disabled(t3);
 }
 };
@@ -3311,7 +3311,7 @@ $.ExceptionImplementation$ = function(message) {
 };
 
 $.PasswordGenerator$ = function() {
-  return new $.PasswordGenerator(10, $.query('#lowerCase'), $.query('#upperCase'), $.query('#numbers'), $.query('#special'), $.query('#generate'), $.query('#password'));
+  return new $.PasswordGenerator(10, $.query('#lower'), $.query('#upper'), $.query('#numbers'), $.query('#special'), $.query('#generate'), $.query('#password'));
 };
 
 $.invokeClosure = function(closure, isolate, numberOfArguments, arg1, arg2) {

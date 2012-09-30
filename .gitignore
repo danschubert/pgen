@@ -1,6 +1,5 @@
 # Dart Excludes
 *~
-*.js
 *.js_
 .children
 .project

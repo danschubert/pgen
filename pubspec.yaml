@@ -1,5 +1,4 @@
 name:  pgen
 description:  A simple password generator
-#dependencies: 
-#  unittest: { sdk: unittest }
-
+author: Daniel Schubert <https://github.com/danschubert>
+homepage: https://github.com/danschubert/pgen

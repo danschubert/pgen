@@ -28,7 +28,7 @@ class PasswordGenerator {
     _addElementHandler(_special);
     _addElementHandler(_generate);
 
-    // Automatically generate first password
+    // Automatically generate first password.
     if (!_generate.disabled) {
       _generatePassword();
     }
@@ -58,8 +58,8 @@ class PasswordGenerator {
     var charCodes = _createCharPool();
     var random = new Random();
     var result = new StringBuffer();
-    for (int i = 0; i < _length; i++) {
-      int charCode = charCodes[random.nextInt(charCodes.length)];
+    for (var i = 0; i < _length; i++) {
+      var charCode = charCodes[random.nextInt(charCodes.length)];
       result.addCharCode(charCode);
     }
     _password.value = result.toString();

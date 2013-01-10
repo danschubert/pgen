@@ -1,6 +1,6 @@
 
-#import('dart:html');
-#import('dart:math');
+import 'dart:html';
+import 'dart:math';
 
 class PasswordGenerator {
   final int _length = 10;
@@ -51,7 +51,7 @@ class PasswordGenerator {
     if (_special.checked) {
       charPool.add(r'!#$%&()*+,-./:;<=>?@[]^_{}');
     }
-    return charPool.toString().charCodes();
+    return charPool.toString().charCodes;
   }
 
   void _generatePassword() {
